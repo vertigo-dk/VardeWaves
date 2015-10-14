@@ -3,7 +3,7 @@ Visual content for the Installation "Lydspejlet" in Varde (DK)
 
 Introduction
 ------------
-Code is written with openFrameworks (openframeworks.cc). And is used to create the visual content for a installation based on Poles based on RGBW LED-strips.
+Code is written with openFrameworks (openframeworks.cc) and is used to create the visual content for a installation based on Poles based on RGBW LED-strips.
 
 Licence
 -------
