@@ -1,0 +1,12 @@
+<visualControl>
+	<posLeft>-0.04</posLeft>
+	<posRight>0</posRight>
+	<damping>0.999</damping>
+	<attack>0.01</attack>
+	<colorLine>255, 255, 255, 255</colorLine>
+	<colorBGTop>0, 154, 255, 255</colorBGTop>
+	<colorBGBot>255, 179, 66, 255</colorBGBot>
+	<colorWaveTop>0, 105, 255, 255</colorWaveTop>
+	<colorWaveBot>0, 0, 55, 255</colorWaveBot>
+<visualControl/>
+</visualControl>
