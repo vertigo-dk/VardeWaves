@@ -7,23 +7,25 @@
 //
 
 // Rednering
-#define RENDER_WIDTH 800
-#define RENDER_HEIGHT 400
+#define RENDER_WIDTH_POLE 32
+#define RENDER_HEIGHT_POLE 287
+
+#define RENDER_WIDTH_RAMP 58
+#define RENDER_HEIGHT_RAMP 153
+
+
 
 // Physics
 
 #define NUM_ARRAY 100
 
-#define PHYS_GRAVITY 		0.0
-#define PHYS_DRAG 			0.001
-#define SPRING_STRENGTH 	0.001
-#define SPRING_DAMPING 		0.003
-
-
 // OSC
 #define OSCRECEIVEPORT 7000
 #define OSCSENDPORT 7001
 #define OSCHOSTIP   "127.0.0.1"
+
+// Visual
+#define LINE_WIDTH 1
 
 
 // UNUSED CODE

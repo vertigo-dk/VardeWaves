@@ -13,7 +13,7 @@ class WaveParticle {
     
     // Inspired by http://vvvv.org/documentation/wave-simulation
 public:
-    ofVec2f p;
+    float p;
     float v;
     float a;
     float attack;
@@ -24,13 +24,13 @@ public:
         damping = _damping;
     }
     
-    void calcAccel(ofVec2f p_left, ofVec2f p_right);
+    void calcAccel(float p_left, float p_right);
     
-    void update( ofVec2f p_left, ofVec2f p_right ){
-        float delta_p = p_left.y + p_right.y - 2*p.y;
+    void update( float p_left, float p_right ){
+        float delta_p = p_left + p_right - 2*p;
         a = attack * delta_p;
         v = (v + a) * damping;
-        p.y = p.y + v;
+        p = p + v;
     }
 };
 
@@ -42,8 +42,8 @@ public:
     void setup();
     void updateResponse(float _attack, float _damping);
     void update(float _inLeft, float _inRight);
-    void drawLine(int _x, int _y, ofColor colorLine,float _posHLine);
-    void drawGradient(int _x, int _y, ofColor colorWaveTop, ofColor colorWaveBot, float _posHWave );
+    void drawLine(int _x, int _y,int _w, int _h, ofColor colorLine, float _posHLine, int _lineWidth);
+    void drawGradient(int _x, int _y, int _w, int _h, ofColor colorWaveTop, ofColor colorWaveBot, float _posHWave );
     
 };
 
@@ -79,8 +79,10 @@ public:
     ofParameter<float> attack;
     ofParameter<float> noiseAmt;
     
-    ofParameter<float> posHWave;
-    ofParameter<float> posHLine;
+    ofParameter<float> posHWavePoles;
+    ofParameter<float> posHWaveRamp;
+    ofParameter<float> posHLinePoles;
+    ofParameter<float> posHLineRamp;
     
     
     
@@ -97,10 +99,12 @@ public:
     
     
     
-    ofShader shaderBlurX;
-    ofShader shaderBlurY;
-    ofFbo grafic_RGB;
-    ofFbo grafic_W;
+
+    ofFbo grafic_RGB_Pole;
+    ofFbo grafic_RGB_Ramp;
+
+    ofFbo grafic_W_Pole;
+    ofFbo grafic_W_Ramp;
     
     ofFbo render;
     ofxSyphonServer syphonRenderOut;
