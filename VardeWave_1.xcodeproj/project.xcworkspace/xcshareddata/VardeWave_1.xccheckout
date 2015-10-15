@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>27ECC04F-C3C6-4C4A-B6E4-379DC163E1E5</string>
+	<key>IDESourceControlProjectName</key>
+	<string>VardeWave_1</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>7F2919F2D45E8EF9CF51C5983185C66CAA7184C5</key>
+		<string>https://github.com/vertigo-dk/VardeWaves.git</string>
+		<key>F4CCB893AFADB97238A965FD2F28717F1CAAE613</key>
+		<string>https://github.com/astellato/ofxSyphon.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>VardeWave_1.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>7F2919F2D45E8EF9CF51C5983185C66CAA7184C5</key>
+		<string>../..</string>
+		<key>F4CCB893AFADB97238A965FD2F28717F1CAAE613</key>
+		<string>../../../../../addons/ofxSyphon</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/vertigo-dk/VardeWaves.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>7F2919F2D45E8EF9CF51C5983185C66CAA7184C5</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F4CCB893AFADB97238A965FD2F28717F1CAAE613</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofxSyphon</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7F2919F2D45E8EF9CF51C5983185C66CAA7184C5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>VardeWaves</string>
+		</dict>
+	</array>
+</dict>
+</plist>
