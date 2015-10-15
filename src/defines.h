@@ -7,8 +7,8 @@
 //
 
 // Rednering
-#define RENDER_WIDTH 1280
-#define RENDER_HEIGHT 720
+#define RENDER_WIDTH 800
+#define RENDER_HEIGHT 400
 
 // Physics
 
