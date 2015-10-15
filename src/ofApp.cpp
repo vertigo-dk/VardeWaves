@@ -92,11 +92,7 @@ void ofApp::update(){
     wave_ramp.updateResponse(attack, damping);
     
     
-}
-
-//--------------------------------------------------------------
-void ofApp::draw(){
-    
+    // moved to Update, to be run when window no tactive
     
     grafic_RGB_Pole.begin();
     ofRectGradient(0,0,grafic_RGB_Pole.getWidth(), grafic_RGB_Pole.getHeight(), colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
@@ -121,11 +117,19 @@ void ofApp::draw(){
     render.begin();
     grafic_RGB_Pole.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
     grafic_RGB_Ramp.draw(RENDER_WIDTH_POLE,0, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
-
+    
     grafic_W_Pole.draw(0,RENDER_HEIGHT_POLE, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
     grafic_W_Ramp.draw(RENDER_WIDTH_POLE,RENDER_HEIGHT_POLE, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
-
+    
     render.end();
+
+    syphonRenderOut.publishTexture(&syphonTex);
+
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){
+    
     
     //ofSetColor(255);
     //render.draw(0,0, RENDER_WIDTH, RENDER_HEIGHT);
@@ -134,7 +138,6 @@ void ofApp::draw(){
     
     ofSetWindowTitle("Varde WaveArray V1 FPS: "+ofToString((int)ofGetFrameRate()));
     
-    syphonRenderOut.publishTexture(&syphonTex);
     
     
     
