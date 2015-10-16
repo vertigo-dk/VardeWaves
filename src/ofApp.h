@@ -7,6 +7,92 @@
 
 #include "defines.h"
 
+class Lygte{
+public:
+    ofVec2f location;
+    ofColor lygteColor;
+    float tempo;
+    bool hard_soft = false;
+    
+    float lifespan;
+    
+    Lygte() {
+        lifespan = 1.0;
+        tempo = 0.01;
+    }
+    
+    // Method to update location
+    void update() {
+        lifespan -= tempo;
+        
+    }
+    // Method to display
+    void draw() {
+        
+        float alpha;
+        if(hard_soft){
+            alpha = (sin(PI*(1-lifespan)+HALF_PI)+1)/2;
+        }else{
+            alpha = (cos(PI*(1-lifespan))+1)/2;
+            
+        }
+        
+        ofSetColor(lygteColor.operator*(alpha));
+        ofFill();
+        ofSetLineWidth(0.);
+        
+        ofRect(location.x,location.y, 1,1);
+        //ofLine(location.x,location.y, location.x+5, location.y);
+        //ofCircle(location.x,location.y,8);
+    }
+    
+    // Is the particle still useful?
+    bool isDead() {
+        if (lifespan < 0.0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+};
+
+class Boubble{
+public:
+    ofVec2f location;
+    ofVec2f velocity;
+    ofColor boubbleColor;
+    
+    Boubble() {
+        velocity = ofVec2f(0., - ofRandom(0.1, 2.));
+    }
+    
+    // Method to update location
+    void update() {
+        location.operator+=(velocity);
+        
+    }
+    // Method to display
+    void draw() {
+        
+        
+        ofSetColor(boubbleColor);
+        ofFill();
+        ofSetLineWidth(0.);
+        ofRect(location.x,location.y, 1,1);
+
+    }
+    
+    // Is the particle still useful?
+    bool isDead() {
+        if(location.y < 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+};
 
 
 class WaveParticle {
@@ -114,6 +200,33 @@ public:
     
     WaveParticleSystem wave_poles;
     WaveParticleSystem wave_ramp;
+    
+    // Blinkende Lyger
+    // GUI / Controlpanel
+    ofParameterGroup paramBlinkendeLyter;
+    ofParameter<float> tempo;
+    ofParameter<float> intensityBlink;
+    ofParameter<bool> hard_soft;
+    ofParameter<ofColor> colorLygter;
+    // BlinkendeLygter
+    vector<Lygte> lygter;
+    ofFbo graficBlinkendeLygter;
+
+    
+    // Boubbles Lyger
+    // GUI / Controlpanel
+    ofParameterGroup paramBoubbles;
+    ofParameter<float> intensityBoubbles;
+    ofParameter<float> velMin;
+    ofParameter<float> velMax;
+
+    ofParameter<ofColor> colorBoubbles;
+    // BlinkendeLygter
+    vector<Boubble> boubbles;
+    ofFbo graficBoubbles;
+
+    
+    
     
     
 };

@@ -67,13 +67,44 @@ void ofApp::setup(){
     visualControl.add(colorWaveTop.set("colorWaveTop", ofColor(0,105,255,255), ofColor(0,0),ofColor(255)));
     visualControl.add(colorWaveBot.set("colorWaveBot", ofColor(0,0,55), ofColor(0,0),ofColor(255)));
     
+    
+    
+    
+    
+    // Blinkende Lygter
+    graficBlinkendeLygter.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE);
+    
+    // Control
+    paramBlinkendeLyter.setName("BlinkendeLygter");
+    paramBlinkendeLyter.add(intensityBlink.set("intensityBlink", 0.0, 0.0, 1.0));
+    paramBlinkendeLyter.add(tempo.set("tempo", 0.02, 0.0001, 0.1));
+    paramBlinkendeLyter.add(hard_soft.set("hard/soft", true));
+    //paramBlinkendeLyter.add(colorLygter.set("colorLygter", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
+    
+    visualControl.add(paramBlinkendeLyter);
+    
+    // Boubbles
+    graficBoubbles.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE);
+    
+    // Control
+    paramBoubbles.setName("Boubbles");
+    paramBoubbles.add(intensityBoubbles.set("intensityBoubbles", 0.0, 0.0, 1.0));
+    paramBoubbles.add(velMin.set("velMin", 0.5, 0.0, 5.0));
+    paramBoubbles.add(velMax.set("velMax", 2., 0.0, 5.0));
+    //paramBoubbles.add(colorBoubbles.set("colorBoubbles", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
+    
+    visualControl.add(paramBoubbles);
+
+    
     gui.setup(visualControl);
+
     
-    
+    // SETUP FOR OSC
     syncOSC.setup((ofParameterGroup&)gui.getParameter(),OSCRECEIVEPORT,"localhost",OSCSENDPORT);
     
-    
-    
+    colorLygter = ofColor(255);
+    colorBoubbles = ofColor(255);
+
 }
 
 //--------------------------------------------------------------
@@ -114,14 +145,88 @@ void ofApp::update(){
     wave_ramp.drawLine(0,0,grafic_W_Ramp.getWidth(), grafic_W_Ramp.getHeight(),colorLine, posHLineRamp, LINE_WIDTH);
     grafic_W_Ramp.end();
     
+
+    
+    // Blinkedne Lygter
+    if(ofRandom(100000)/100000 < intensityBlink){
+        Lygte lygte;
+        lygte.lygteColor = colorLygter;
+        lygte.location = ofVec2f(((int)ofRandom(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP)),(int)ofRandom(RENDER_HEIGHT_POLE));
+        lygte.tempo = tempo;
+        lygte.hard_soft = hard_soft;
+        
+        lygter.push_back(lygte);
+    }
+    
+    for (vector<Lygte>::iterator it=lygter.begin(); it!=lygter.end();)    {
+        it->update();
+        if(it->isDead())
+            it = lygter.erase(it);
+        else
+            ++it;
+    }
+    
+    graficBlinkendeLygter.begin();
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    for(int i = 0; i < lygter.size(); i++){
+        lygter[i].draw();
+    }
+    graficBlinkendeLygter.end();
+    
+    
+    // Boubbles
+    if(ofRandom(100000)/100000 < intensityBoubbles){
+        Boubble boubble;
+        boubble.boubbleColor = colorBoubbles;
+        boubble.location = ofVec2f(((int)ofRandom(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP)),RENDER_HEIGHT_POLE);
+        boubble.velocity = ofVec2f(0., - ofRandom(velMin   , velMax));
+        
+        boubbles.push_back(boubble);
+    }
+    
+    for (vector<Boubble>::iterator it=boubbles.begin(); it!=boubbles.end();)    {
+        it->update();
+        
+        if(it->isDead())
+            it = boubbles.erase(it);
+        else
+            ++it;
+    }
+    
+    graficBoubbles.begin();
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    for(int i = 0; i < boubbles.size(); i++){
+        boubbles[i].draw();
+    }
+    graficBoubbles.end();
+    
+    
+    
+    
+    
+    // Draw the content into the renderer for syphon publishing.
+    
     render.begin();
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ofSetColor(255,255);
+    
     grafic_RGB_Pole.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
     grafic_RGB_Ramp.draw(RENDER_WIDTH_POLE,0, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
     
     grafic_W_Pole.draw(0,RENDER_HEIGHT_POLE, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
     grafic_W_Ramp.draw(RENDER_WIDTH_POLE,RENDER_HEIGHT_POLE, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
     
+    graficBlinkendeLygter.draw(0,RENDER_HEIGHT_POLE);
+    graficBoubbles.draw(0,RENDER_HEIGHT_POLE);
+
     render.end();
+
+    
+    
+    
 
     syphonRenderOut.publishTexture(&syphonTex);
 
@@ -319,7 +424,7 @@ void WaveParticleSystem::drawLine(int _x, int _y, int _w, int _h, ofColor colorL
     if(true){
         ofSetLineWidth(_lineWidth);
         ofSetColor(colorLine);
-        float dist = _w / (NUM_ARRAY-1);
+        float dist = _w / (NUM_ARRAY-2);
         
         ofPolyline line;
         
@@ -343,7 +448,7 @@ void WaveParticleSystem::drawGradient(int _x, int _y, int _w, int _h, ofColor co
     ofPushMatrix();
     ofTranslate(_x, _y);
     
-    float dist = _w/(NUM_ARRAY-1);
+    float dist = _w/(NUM_ARRAY);
     ofMesh mesh;
     mesh.setMode(OF_PRIMITIVE_TRIANGLES);
     
@@ -352,7 +457,7 @@ void WaveParticleSystem::drawGradient(int _x, int _y, int _w, int _h, ofColor co
     
     
     
-    for(int i = 0; i < NUM_ARRAY; i++){
+    for(int i = 0; i <= NUM_ARRAY; i++){
         
         mesh.addVertex(ofVec2f(dist*i, (waveParticles[i].p/2+1-_posHWave)*_h));
         mesh.addColor(colorWaveTop_f);
