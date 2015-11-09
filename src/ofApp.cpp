@@ -19,9 +19,9 @@ void ofApp::setup(){
     grafic_W_Pole.allocate(NUM_ARRAY, RENDER_HEIGHT_POLE, GL_RGBA32F);
     grafic_W_Ramp.allocate(NUM_ARRAY, RENDER_HEIGHT_RAMP,GL_RGBA32F);
     
-    render.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE*2);
+    render.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE);
     syphonRenderOut.setName("Waves");
-    syphonTex.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE*2, GL_RGBA);
+    syphonTex.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE, GL_RGBA);
     
     
     syphonTex = render.getTexture();
@@ -136,12 +136,16 @@ void ofApp::update(){
     grafic_RGB_Ramp.end();
     
     grafic_W_Pole.begin();
-    ofBackground(0,255);
+   // ofBackground(0,255);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     wave_poles.drawLine(0,0,grafic_W_Pole.getWidth(), grafic_W_Pole.getHeight(), colorLine, posHLinePoles, LINE_WIDTH);
     grafic_W_Pole.end();
     
     grafic_W_Ramp.begin();
-    ofBackground(0,255);
+   // ofBackground(0,255);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     wave_ramp.drawLine(0,0,grafic_W_Ramp.getWidth(), grafic_W_Ramp.getHeight(),colorLine, posHLineRamp, LINE_WIDTH);
     grafic_W_Ramp.end();
     
@@ -215,12 +219,19 @@ void ofApp::update(){
     
     grafic_RGB_Pole.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
     grafic_RGB_Ramp.draw(RENDER_WIDTH_POLE,0, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
+
+    grafic_W_Pole.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
+    grafic_W_Ramp.draw(RENDER_WIDTH_POLE,0, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
+   // grafic_W_Pole.draw(0,RENDER_HEIGHT_POLE, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
+   // grafic_W_Ramp.draw(RENDER_WIDTH_POLE,RENDER_HEIGHT_POLE, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
     
-    grafic_W_Pole.draw(0,RENDER_HEIGHT_POLE, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
-    grafic_W_Ramp.draw(RENDER_WIDTH_POLE,RENDER_HEIGHT_POLE, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
+    graficBlinkendeLygter.draw(0,0);//RENDER_HEIGHT_POLE);
+    graficBoubbles.draw(0,0);//RENDER_HEIGHT_POLE);
     
-    graficBlinkendeLygter.draw(0,RENDER_HEIGHT_POLE);
-    graficBoubbles.draw(0,RENDER_HEIGHT_POLE);
+    
+    //ofRectGradient(,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
+
+    ofRectGradient(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
 
     render.end();
 
@@ -262,7 +273,7 @@ void ofApp::ofRectGradient(int px, int py, int w, int h,const ofColor& start, co
     if(mode == OF_GRADIENT_CIRCULAR) {
         // this could be optimized by building a single mesh once, then copying
         // it and just adding the colors whenever the function is called.
-        ofVec2f center(w / 2, h / 2);
+        ofVec2f center(w / 2 + px, h / 2 + py);
         gradientMesh.addVertex(center);
         gradientMesh.addColor(start);
         int n = 32; // circular gradient resolution
@@ -276,22 +287,22 @@ void ofApp::ofRectGradient(int px, int py, int w, int h,const ofColor& start, co
         }
     } else if(mode == OF_GRADIENT_LINEAR) {
         gradientMesh.addVertex(ofVec2f(px, py));
-        gradientMesh.addVertex(ofVec2f(w, py));
-        gradientMesh.addVertex(ofVec2f(w, h));
-        gradientMesh.addVertex(ofVec2f(px, h));
+        gradientMesh.addVertex(ofVec2f(px+w, py));
+        gradientMesh.addVertex(ofVec2f(px+w, py+h));
+        gradientMesh.addVertex(ofVec2f(px, py+h));
         gradientMesh.addColor(start);
         gradientMesh.addColor(start);
         gradientMesh.addColor(end);
         gradientMesh.addColor(end);
     } else if(mode == OF_GRADIENT_BAR) {
-        gradientMesh.addVertex(ofVec2f(w / 2, h / 2));
-        gradientMesh.addVertex(ofVec2f(px, h / 2));
+        gradientMesh.addVertex(ofVec2f(px+w / 2, py+h / 2));
+        gradientMesh.addVertex(ofVec2f(px, py+h / 2));
         gradientMesh.addVertex(ofVec2f(px, py));
-        gradientMesh.addVertex(ofVec2f(w, py));
-        gradientMesh.addVertex(ofVec2f(w, h / 2));
-        gradientMesh.addVertex(ofVec2f(w, h));
-        gradientMesh.addVertex(ofVec2f(px, h));
-        gradientMesh.addVertex(ofVec2f(px, h / 2));
+        gradientMesh.addVertex(ofVec2f(px+w, py));
+        gradientMesh.addVertex(ofVec2f(px+w, py+h / 2));
+        gradientMesh.addVertex(ofVec2f(px+w, py+h));
+        gradientMesh.addVertex(ofVec2f(px, py+h));
+        gradientMesh.addVertex(ofVec2f(px, py+h / 2));
         gradientMesh.addColor(start);
         gradientMesh.addColor(start);
         gradientMesh.addColor(end);

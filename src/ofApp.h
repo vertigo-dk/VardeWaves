@@ -37,7 +37,8 @@ public:
             
         }
         
-        ofSetColor(lygteColor.operator*(alpha));
+        lygteColor.a = alpha*255;
+        ofSetColor(lygteColor);
         ofFill();
         ofSetLineWidth(0.);
         
