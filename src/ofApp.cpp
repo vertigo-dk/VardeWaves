@@ -106,13 +106,13 @@ void ofApp::setup(){
     paramLines.setName("DancingLines");
     paramLines.add(speed.set("speed", .2, 0.0, 1));
 
-    paramLines.add(colorDLines.set("colorDLines", ofColor(0,0), ofColor(0,0), ofColor(255,255)));
+    paramLines.add(colorDLines.set("colorDLines", ofColor(0,255), ofColor(0,0), ofColor(255,255)));
     
     for(int i = 0; i < 10; i++){
         DancingLine newLine;
         newLine.location1 = ofVec2f(0, RENDER_HEIGHT_POLE/2);
         newLine.location2 = ofVec2f(RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE/2);
-        newLine.lineColor = ofColor(0);
+        newLine.lineColor = colorDLines;
         newLine.freedome = RENDER_HEIGHT_POLE;
         
         dancingLines.push_back(newLine);
@@ -121,7 +121,7 @@ void ofApp::setup(){
         DancingLine newLine;
         newLine.location1 = ofVec2f(RENDER_WIDTH_POLE, RENDER_HEIGHT_RAMP/2);
         newLine.location2 = ofVec2f(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP/2);
-        newLine.lineColor = ofColor(0);
+        newLine.lineColor = colorDLines;
         newLine.freedome = RENDER_HEIGHT_RAMP;
         
         dancingLines.push_back(newLine);
@@ -130,6 +130,10 @@ void ofApp::setup(){
     visualControl.add(paramLines);
     
 
+    fboTexWaves.allocate(RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
+    waveTex = fboTexWaves.getTexture();
+
+    
     
     gui.setup(visualControl);
 
@@ -162,7 +166,9 @@ void ofApp::update(){
     
     grafic_RGB_Pole.begin();
     ofRectGradient(0,0,grafic_RGB_Pole.getWidth(), grafic_RGB_Pole.getHeight(), colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
+   // waveTex.bind();
     wave_poles.drawGradient(0,0,grafic_RGB_Pole.getWidth(), grafic_RGB_Pole.getHeight(), colorWaveTop, colorWaveBot, posHWavePoles);
+   // waveTex.unbind();
     grafic_RGB_Pole.end();
     
     grafic_RGB_Ramp.begin();
@@ -189,7 +195,7 @@ void ofApp::update(){
     // Blinkedne Lygter
     if(ofRandom(100000)/100000 < intensityBlink){
         Lygte lygte;
-        lygte.lygteColor = colorWaveBot; //colorLygter
+        lygte.lygteColor = colorLygter;
         lygte.location = ofVec2f(((int)ofRandom(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP)),(int)ofRandom(RENDER_HEIGHT_POLE));
         lygte.tempo = tempo;
         lygte.hard_soft = hard_soft;
@@ -259,6 +265,15 @@ void ofApp::update(){
         dancingLines[i].draw();
     }
     graficDancingLines.end();
+    
+    
+    
+    fboTexWaves.begin();
+
+    ofRectGradient(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
+    graficDancingLines.draw(0,0);
+    
+    fboTexWaves.end();
     
     
     
@@ -516,6 +531,7 @@ void WaveParticleSystem::drawGradient(int _x, int _y, int _w, int _h, ofColor co
     
     float dist = _w/(NUM_ARRAY);
     ofMesh mesh;
+    mesh.enableTextures();
     mesh.setMode(OF_PRIMITIVE_TRIANGLES);
     
     ofFloatColor colorWaveTop_f = colorWaveTop;
@@ -527,9 +543,11 @@ void WaveParticleSystem::drawGradient(int _x, int _y, int _w, int _h, ofColor co
         
         mesh.addVertex(ofVec2f(dist*i, (waveParticles[i].p/2+1-_posHWave)*_h));
         mesh.addColor(colorWaveTop_f);
+      //  mesh.addTexCoord(ofVec2f(0,NUM_ARRAY));
         
         mesh.addVertex(ofPoint(dist*i, _h));
         mesh.addColor(colorWaveBot_f);
+      //  mesh.addTexCoord(ofVec2f(RENDER_HEIGHT_POLE,NUM_ARRAY));
         
     }
     for(int i = 0; i < NUM_ARRAY-1; i++){

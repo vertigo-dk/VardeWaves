@@ -25,7 +25,7 @@
 #define OSCHOSTIP   "127.0.0.1"
 
 // Visual
-#define LINE_WIDTH 1
+#define LINE_WIDTH 4
 
 
 // UNUSED CODE

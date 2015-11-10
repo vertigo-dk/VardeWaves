@@ -271,6 +271,9 @@ public:
 
         ofFbo graficDancingLines;
     
+    ofFbo fboTexWaves;
+    ofTexture waveTex;
+
     
 };
 
