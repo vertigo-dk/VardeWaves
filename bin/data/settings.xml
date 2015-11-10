@@ -1,12 +1,33 @@
 <visualControl>
 	<posLeft>-0.04</posLeft>
 	<posRight>0</posRight>
-	<damping>0.999</damping>
-	<attack>0.01</attack>
+	<damping>0.836</damping>
+	<attack>0.04</attack>
 	<colorLine>255, 255, 255, 255</colorLine>
-	<colorBGTop>0, 154, 255, 255</colorBGTop>
-	<colorBGBot>255, 179, 66, 255</colorBGBot>
-	<colorWaveTop>0, 105, 255, 255</colorWaveTop>
-	<colorWaveBot>0, 0, 55, 255</colorWaveBot>
+	<colorBGTop>0, 0, 0, 255</colorBGTop>
+	<colorBGBot>0, 0, 0, 111</colorBGBot>
+	<colorWaveTop>1, 0, 0, 255</colorWaveTop>
+	<colorWaveBot>0, 0, 0, 120</colorWaveBot>
 <visualControl/>
+<inLeft>0.13</inLeft>
+	<inRight>-0.08</inRight>
+	<noiseAmt>0.15</noiseAmt>
+	<posHWavePoles>0.73</posHWavePoles>
+	<posHWaveRamp>0.75</posHWaveRamp>
+	<posHLinePoles>2</posHLinePoles>
+	<posHLineRamp>2</posHLineRamp>
+	<BlinkendeLygter>
+		<intensityBlink>1</intensityBlink>
+		<tempo>0.0541276</tempo>
+		<hard_soft>1</hard_soft>
+	</BlinkendeLygter>
+	<Boubbles>
+		<intensityBoubbles>0.357143</intensityBoubbles>
+		<velMin>1.63265</velMin>
+		<velMax>0.994898</velMax>
+	</Boubbles>
+	<DancingLines>
+		<speed>0.0663265</speed>
+		<colorDLines>0, 132, 0, 255</colorDLines>
+	</DancingLines>
 </visualControl>

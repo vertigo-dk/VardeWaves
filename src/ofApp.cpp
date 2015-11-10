@@ -94,6 +94,41 @@ void ofApp::setup(){
     //paramBoubbles.add(colorBoubbles.set("colorBoubbles", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
     
     visualControl.add(paramBoubbles);
+    
+    
+    
+    
+    
+    // Dancing Lines
+    graficDancingLines.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE);
+    
+    // Control
+    paramLines.setName("DancingLines");
+    paramLines.add(speed.set("speed", .2, 0.0, 1));
+
+    paramLines.add(colorDLines.set("colorDLines", ofColor(0,0), ofColor(0,0), ofColor(255,255)));
+    
+    for(int i = 0; i < 10; i++){
+        DancingLine newLine;
+        newLine.location1 = ofVec2f(0, RENDER_HEIGHT_POLE/2);
+        newLine.location2 = ofVec2f(RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE/2);
+        newLine.lineColor = ofColor(0);
+        newLine.freedome = RENDER_HEIGHT_POLE;
+        
+        dancingLines.push_back(newLine);
+    }
+    for(int i = 0; i < 10; i++){
+        DancingLine newLine;
+        newLine.location1 = ofVec2f(RENDER_WIDTH_POLE, RENDER_HEIGHT_RAMP/2);
+        newLine.location2 = ofVec2f(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP/2);
+        newLine.lineColor = ofColor(0);
+        newLine.freedome = RENDER_HEIGHT_RAMP;
+        
+        dancingLines.push_back(newLine);
+    }
+    
+    visualControl.add(paramLines);
+    
 
     
     gui.setup(visualControl);
@@ -154,7 +189,7 @@ void ofApp::update(){
     // Blinkedne Lygter
     if(ofRandom(100000)/100000 < intensityBlink){
         Lygte lygte;
-        lygte.lygteColor = colorLygter;
+        lygte.lygteColor = colorWaveBot; //colorLygter
         lygte.location = ofVec2f(((int)ofRandom(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP)),(int)ofRandom(RENDER_HEIGHT_POLE));
         lygte.tempo = tempo;
         lygte.hard_soft = hard_soft;
@@ -207,6 +242,24 @@ void ofApp::update(){
     graficBoubbles.end();
     
     
+    // DANCING LINES
+    
+    
+    for (vector<DancingLine>::iterator it=dancingLines.begin(); it!=dancingLines.end();)    {
+        it->speed = speed;
+        it->lineColor = colorDLines;
+        it->update(ofGetElapsedTimef());
+        ++it;
+    }
+    
+    graficDancingLines.begin();
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    for(int i = 0; i < dancingLines.size(); i++){
+        dancingLines[i].draw();
+    }
+    graficDancingLines.end();
+    
     
     
     
@@ -220,6 +273,9 @@ void ofApp::update(){
     grafic_RGB_Pole.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
     grafic_RGB_Ramp.draw(RENDER_WIDTH_POLE,0, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
 
+    graficDancingLines.draw(0,0);
+
+    
     grafic_W_Pole.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
     grafic_W_Ramp.draw(RENDER_WIDTH_POLE,0, RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
    // grafic_W_Pole.draw(0,RENDER_HEIGHT_POLE, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
@@ -227,7 +283,6 @@ void ofApp::update(){
     
     graficBlinkendeLygter.draw(0,0);//RENDER_HEIGHT_POLE);
     graficBoubbles.draw(0,0);//RENDER_HEIGHT_POLE);
-    
     
     //ofRectGradient(,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
 
@@ -245,7 +300,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    ofBackground(150);
     
     //ofSetColor(255);
     //render.draw(0,0, RENDER_WIDTH, RENDER_HEIGHT);

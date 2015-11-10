@@ -42,7 +42,7 @@ public:
         ofFill();
         ofSetLineWidth(0.);
         
-        ofRect(location.x,location.y, 1,1);
+        ofDrawRectangle(location.x,location.y, 1,1);
         //ofLine(location.x,location.y, location.x+5, location.y);
         //ofCircle(location.x,location.y,8);
     }
@@ -80,7 +80,7 @@ public:
         ofSetColor(boubbleColor);
         ofFill();
         ofSetLineWidth(0.);
-        ofRect(location.x,location.y, 1,1);
+        ofDrawRectangle(location.x,location.y, 1,1);
 
     }
     
@@ -95,6 +95,39 @@ public:
     
 };
 
+class DancingLine{
+public:
+    ofVec2f location1;
+    ofVec2f location2;
+    float   freedome;
+    float speed;
+    float seedOffset;
+
+    ofColor lineColor;
+    
+    DancingLine() {
+        speed = 4;
+        lineColor = ofColor(0);
+        seedOffset = ofRandom(1000);
+        freedome = 100;
+    }
+    
+    // Method to update location
+    void update(float _timer) {
+        location1.y=freedome * (ofNoise(_timer*speed+seedOffset))*1.5-0.5;
+        location2.y=freedome * (ofNoise(_timer*1.5*speed+seedOffset))*1.5-0.5;
+
+    }
+    // Method to display
+    void draw() {
+        
+        
+        ofSetColor(lineColor);
+        ofSetLineWidth(1.);
+        ofDrawLine(location1,location2);
+        
+    }
+};
 
 class WaveParticle {
     
@@ -227,7 +260,16 @@ public:
     ofFbo graficBoubbles;
 
     
+    // dancing Lines
+    // GUI / Controlpanel
+    ofParameterGroup paramLines;
+    ofParameter<float> speed;
     
+    ofParameter<ofColor> colorDLines;
+
+    vector<DancingLine> dancingLines;
+
+        ofFbo graficDancingLines;
     
     
 };
