@@ -99,7 +99,8 @@ class DancingLine{
 public:
     ofVec2f location1;
     ofVec2f location2;
-    float   freedome;
+    float offset1, offset2;
+    float   freedom;
     float speed;
     float seedOffset;
 
@@ -109,13 +110,13 @@ public:
         speed = 4;
         lineColor = ofColor(0);
         seedOffset = ofRandom(1000);
-        freedome = 100;
+        freedom = 100;
     }
     
     // Method to update location
     void update(float _timer) {
-        location1.y=freedome * (ofNoise(_timer*speed+seedOffset))*1.5-0.5;
-        location2.y=freedome * (ofNoise(_timer*1.5*speed+seedOffset))*1.5-0.5;
+        offset1 = freedom * ((ofNoise(_timer*speed+seedOffset))*1.8-0.4);
+        offset2 = freedom * ((ofNoise(_timer*1.5*speed+seedOffset))*1.8-0.4);
 
     }
     // Method to display
@@ -124,7 +125,7 @@ public:
         
         ofSetColor(lineColor);
         ofSetLineWidth(1.);
-        ofDrawLine(location1,location2);
+        ofDrawLine(location1.x, location1.y+offset1,location2.x, location2.y+offset2);
         
     }
 };
@@ -163,7 +164,7 @@ public:
     void updateResponse(float _attack, float _damping);
     void update(float _inLeft, float _inRight);
     void drawLine(int _x, int _y,int _w, int _h, ofColor colorLine, float _posHLine, int _lineWidth);
-    void drawGradient(int _x, int _y, int _w, int _h, ofColor colorWaveTop, ofColor colorWaveBot, float _posHWave );
+    void drawGradient(int _x, int _y, int _w, int _h, float _posHWave , ofTexture& _texture);
     
 };
 
@@ -195,8 +196,6 @@ public:
     ofParameterGroup visualControl;
     ofParameter<float> inLeft;
     ofParameter<float> inRight;
-    ofParameter<float> damping;
-    ofParameter<float> attack;
     ofParameter<float> noiseAmt;
     
     ofParameter<float> posHWavePoles;
@@ -220,8 +219,8 @@ public:
     
     
 
-    ofFbo grafic_RGB_Pole;
-    ofFbo grafic_RGB_Ramp;
+    //ofFbo grafic_RGB_Pole;
+    //ofFbo grafic_RGB_Ramp;
 
     ofFbo grafic_W_Pole;
     ofFbo grafic_W_Ramp;
@@ -267,13 +266,11 @@ public:
     
     ofParameter<ofColor> colorDLines;
 
-    vector<DancingLine> dancingLines;
-
-        ofFbo graficDancingLines;
+    vector<DancingLine> dancingLinesPole;
+    vector<DancingLine> dancingLinesRamp;
     
-    ofFbo fboTexWaves;
-    ofTexture waveTex;
-
+    ofFbo fboTexPoles;
+    ofFbo fboTexRamp;
     
 };
 
