@@ -7,8 +7,8 @@ void ofApp::setup(){
     ofSetVerticalSync( true );
     ofSetBackgroundAuto(false);
     
-    wave_poles.setup();
-    wave_ramp.setup();
+    wave_poles.setup(NUM_ARRAY);
+    wave_ramp.setup(NUM_ARRAY);
     wave_poles.updateResponse(ATTACK, DAMPING);
     wave_ramp.updateResponse(ATTACK, DAMPING);
     
@@ -28,22 +28,22 @@ void ofApp::setup(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     render.end();
     
-    visualControl.setName("visualControl");
-    visualControl.add(inLeft.set("inLeft", 0., -1., 1.));
-    visualControl.add(inRight.set("inRight", 0., -1., 1.));
-    visualControl.add(noiseAmt.set("noiseAmt", 0.15, 0., 1));
+    WaveControl.setName("WaveControl");
+    WaveControl.add(inLeft.set("inLeft", 0., -1., 1.));
+    WaveControl.add(inRight.set("inRight", 0., -1., 1.));
+    WaveControl.add(noiseAmt.set("noiseAmt", 0.15, 0., 1));
     
-    visualControl.add(posHWavePoles.set("posHWavePoles", 0.5, 0., 1));
-    visualControl.add(posHWaveRamp.set("posHWaveRamp", 0.5, 0., 1));
-    visualControl.add(posHLinePoles.set("posHLinePoles", 0.5, 0, 1));
-    visualControl.add(posHLineRamp.set("posHLineRamp", 0.5, 0, 1));
+    WaveControl.add(posHWavePoles.set("posHWavePoles", 0.5, 0., 2));
+    WaveControl.add(posHWaveRamp.set("posHWaveRamp", 0.5, 0., 2));
+    WaveControl.add(posHLinePoles.set("posHLinePoles", 0.5, 0, 2));
+    WaveControl.add(posHLineRamp.set("posHLineRamp", 0.5, 0, 2));
     
-    visualControl.add(colorLine.set("colorLine", ofColor(255,255), ofColor(0,0),ofColor(255)));
-    visualControl.add(colorBGTop.set("colorBGTop", ofColor(0,154,255,255), ofColor(0,0),ofColor(255)));
-    visualControl.add(colorBGBot.set("colorBGBot", ofColor(255,179,66,255), ofColor(0,0),ofColor(255)));
-    visualControl.add(colorWaveTop.set("colorWaveTop", ofColor(0,105,255,255), ofColor(0,0),ofColor(255)));
-    visualControl.add(colorWaveBot.set("colorWaveBot", ofColor(0,0,55), ofColor(0,0),ofColor(255)));
-    
+    WaveControl.add(colorTopTop.set("colorTopTop", ofColor(0,154,255,255), ofColor(0,0),ofColor(255)));
+    WaveControl.add(colorTopBot.set("colorTopBot", ofColor(255,179,66,255), ofColor(0,0),ofColor(255)));
+    WaveControl.add(colorBotTop.set("colorBotTop", ofColor(0,105,255,255), ofColor(0,0),ofColor(255)));
+    WaveControl.add(colorBotBot.set("colorBotBot", ofColor(0,0,55), ofColor(0,0),ofColor(255)));
+    WaveControl.add(colorLine.set("colorLine", ofColor(255,255), ofColor(0,0),ofColor(255)));
+
     
     
     
@@ -52,25 +52,20 @@ void ofApp::setup(){
     graficBlinkendeLygter.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE);
     
     // Control
-    paramBlinkendeLyter.setName("BlinkendeLygter");
-    paramBlinkendeLyter.add(intensityBlink.set("intensityBlink", 0.0, 0.0, 1.0));
-    paramBlinkendeLyter.add(tempo.set("tempo", 0.02, 0.0001, 0.1));
-    paramBlinkendeLyter.add(hard_soft.set("hard/soft", true));
-    //paramBlinkendeLyter.add(colorLygter.set("colorLygter", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
+    WaveControl.add(blinkIntensity.set("blinkIntensity", 0.0, 0.0, 1.0));
+    WaveControl.add(blinkTempo.set("blinkTempo", 0.02, 0.0001, 0.1));
+    WaveControl.add(hard_soft.set("hard/soft", true));
+    WaveControl.add(colorBlink.set("colorBlink", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
     
-    visualControl.add(paramBlinkendeLyter);
     
     // Boubbles
     graficBoubbles.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE);
     
     // Control
-    paramBoubbles.setName("Boubbles");
-    paramBoubbles.add(intensityBoubbles.set("intensityBoubbles", 0.0, 0.0, 1.0));
-    paramBoubbles.add(velMin.set("velMin", 0.5, 0.0, 5.0));
-    paramBoubbles.add(velMax.set("velMax", 2., 0.0, 5.0));
-    //paramBoubbles.add(colorBoubbles.set("colorBoubbles", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
-    
-    visualControl.add(paramBoubbles);
+    WaveControl.add(boubblesIntensity.set("boubblesIntensity", 0.0, 0.0, 1.0));
+    WaveControl.add(boubblesVelMin.set("boubblesVelMin", 0.5, 0.0, 5.0));
+    WaveControl.add(boubblesVelMax.set("boubblesVelMax", 2., 0.0, 5.0));
+    WaveControl.add(colorBoubbles.set("colorBoubbles", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
     
     
     
@@ -78,11 +73,13 @@ void ofApp::setup(){
     
     // Dancing Lines
     
-    // Control
-    paramLines.setName("DancingLines");
-    paramLines.add(speed.set("speed", .2, 0.0, 1));
+    counterDLines = 0;
     
-    paramLines.add(colorDLines.set("colorDLines", ofColor(0,255), ofColor(0,0), ofColor(255,255)));
+    // Control
+    WaveControl.add(dLinesSpeed.set("dLinesSpeed", .2, 0.0, 1));
+    WaveControl.add(dLinesSync.set("dLinesSync", .9, 0.5, 1));
+
+    WaveControl.add(colorDLines.set("colorDLines", ofColor(0,255), ofColor(0,0), ofColor(255,255)));
     
     for(int i = 0; i < 10; i++){
         DancingLine newLine;
@@ -103,18 +100,21 @@ void ofApp::setup(){
         dancingLinesRamp.push_back(newLine);
     }
     
-    visualControl.add(paramLines);
     
+    WaveControl.add(updateRequest.set("updateRequest",0, 0, 1));
     
-    
-    gui.setup(visualControl);
+    gui.setup(WaveControl);
     
     
     // SETUP FOR OSC
     syncOSC.setup((ofParameterGroup&)gui.getParameter(),OSCRECEIVEPORT,"localhost",OSCSENDPORT);
     
-    colorLygter = ofColor(255);
-    colorBoubbles = ofColor(255);
+   // colorBlink = ofColor(255);
+   // colorBoubbles = ofColor(255);
+    
+    updateRequest = 1;
+    syncOSC.update();
+    updateRequest = 0;
     
 }
 
@@ -125,14 +125,16 @@ void ofApp::update(){
     
     
     // Blinkedne Lygter
-    if(ofRandom(100000)/100000 < intensityBlink){
-        Lygte lygte;
-        lygte.lygteColor = colorLygter;
-        lygte.location = ofVec2f(((int)ofRandom(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP)),(int)ofRandom(RENDER_HEIGHT_POLE));
-        lygte.tempo = tempo;
-        lygte.hard_soft = hard_soft;
-        
-        lygter.push_back(lygte);
+    for(int i = 0; i < 10 ; i++){
+        if(ofRandom(100000)/100000 < blinkIntensity){
+            Lygte lygte;
+            lygte.lygteColor = colorBlink;
+            lygte.location = ofVec2f(((int)ofRandom(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP)),(int)ofRandom(RENDER_HEIGHT_POLE));
+            lygte.tempo = blinkTempo;
+            lygte.hard_soft = hard_soft;
+            
+            lygter.push_back(lygte);
+        }
     }
     
     for (vector<Lygte>::iterator it=lygter.begin(); it!=lygter.end();)    {
@@ -153,11 +155,11 @@ void ofApp::update(){
     
     
     // Boubbles
-    if(ofRandom(100000)/100000 < intensityBoubbles){
+    if(ofRandom(100000)/100000 < boubblesIntensity){
         Boubble boubble;
         boubble.boubbleColor = colorBoubbles;
         boubble.location = ofVec2f(((int)ofRandom(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP)),RENDER_HEIGHT_POLE);
-        boubble.velocity = ofVec2f(0., - ofRandom(velMin   , velMax));
+        boubble.velocity = ofVec2f(0., - ofRandom(boubblesVelMin   , boubblesVelMax));
         
         boubbles.push_back(boubble);
     }
@@ -182,18 +184,20 @@ void ofApp::update(){
     
     // DANCING LINES
     
+    counterDLines += dLinesSpeed/100;
+    
     
     for (vector<DancingLine>::iterator it=dancingLinesPole.begin(); it!=dancingLinesPole.end();)    {
-        it->speed = speed;
         it->lineColor = colorDLines;
-        it->update(ofGetElapsedTimef());
+        it->update(counterDLines);
+        it->sync = dLinesSync;
         ++it;
     }
     
     for (vector<DancingLine>::iterator it=dancingLinesRamp.begin(); it!=dancingLinesRamp.end();)    {
-        it->speed = speed;
         it->lineColor = colorDLines;
-        it->update(ofGetElapsedTimef());
+        it->update(counterDLines);
+        it->sync = dLinesSync;
         ++it;
     }
     
@@ -201,20 +205,20 @@ void ofApp::update(){
     
     
     fboTexPoles.begin();
-    ofRectGradient(0, fboTexPoles.getHeight()/2, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorWaveTop, colorWaveBot, OF_GRADIENT_LINEAR);
+    ofRectGradient(0, fboTexPoles.getHeight()/2, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorBotTop, colorBotBot, OF_GRADIENT_LINEAR);
     for(int i = 0; i < dancingLinesPole.size(); i++){
         dancingLinesPole[i].draw();
     }
-    ofRectGradient(0,0, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
+    ofRectGradient(0,0, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     fboTexPoles.end();
     
     
     fboTexRamp.begin();
-    ofRectGradient(0, fboTexRamp.getHeight()/2, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorWaveTop, colorWaveBot, OF_GRADIENT_LINEAR);
+    ofRectGradient(0, fboTexRamp.getHeight()/2, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorBotTop, colorBotBot, OF_GRADIENT_LINEAR);
     for(int i = 0; i < dancingLinesRamp.size(); i++){
         dancingLinesRamp[i].draw();
     }
-    ofRectGradient(0,0, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
+    ofRectGradient(0,0, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     fboTexRamp.end();
     
     // draw the Waves
@@ -225,8 +229,8 @@ void ofApp::update(){
     
     wave_poles.update(inLeft+noiseLeft, inRight+noiseRight);
     wave_ramp.update( inRight+noiseRight_ramp, inLeft+noiseLeft_ramp);
-    wave_poles.updateResponse(ATTACK, DAMPING);
-    wave_ramp.updateResponse(ATTACK, DAMPING);
+//    wave_poles.updateResponse(ATTACK, DAMPING);
+//    wave_ramp.updateResponse(ATTACK, DAMPING);
     
     
     // Draw the content into the renderer for syphon publishing.
@@ -246,9 +250,9 @@ void ofApp::update(){
     graficBlinkendeLygter.draw(0,0);//RENDER_HEIGHT_POLE);
     graficBoubbles.draw(0,0);//RENDER_HEIGHT_POLE);
     
-    //ofRectGradient(,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
+    //ofRectGradient(,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     
-    ofRectGradient(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorBGTop, colorBGBot, OF_GRADIENT_LINEAR);
+    ofRectGradient(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     
     render.end();
     
@@ -385,9 +389,9 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 //------------------------SPRING ARRAY--------------------------
-void WaveParticleSystem::setup(){
+void WaveParticleSystem::setup(int _numArray){
     
-    for(int i = 0; i<NUM_ARRAY; i++){
+    for(int i = 0; i<_numArray; i++){
         WaveParticle wP;
         wP.p = 0.;
         
@@ -407,10 +411,10 @@ void WaveParticleSystem::update(float _inLeft, float _inRight){
     
     
     
-    for(int i = 1; i<NUM_ARRAY-1; i++){
+    for(int i = 1; i<waveParticles.size()-1; i++){
         
         waveParticles[i].update(waveParticles[i-1].p, waveParticles[i+1].p);
-        int i2 = NUM_ARRAY-1-i;
+        int i2 = waveParticles.size()-1-i;
         waveParticles[i2].update(waveParticles[i2-1].p, waveParticles[i2+1].p);
         
     }
@@ -419,7 +423,7 @@ void WaveParticleSystem::update(float _inLeft, float _inRight){
 
 void WaveParticleSystem::updateResponse(float _attack, float _damping){
     
-    for(int i = 0; i<NUM_ARRAY; i++){
+    for(int i = 0; i<waveParticles.size(); i++){
         waveParticles[i].damping = _damping;
         waveParticles[i].attack  = _attack;
         
@@ -434,7 +438,7 @@ void WaveParticleSystem::drawLine(int _x, int _y, int _w, int _h, ofColor colorL
     ofSetLineWidth(_lineWidth);
     ofSetColor(colorLine);
     
-    float inc = NUM_ARRAY/_w;
+    float inc = waveParticles.size()/_w;
     
     ofPolyline line;
     
@@ -459,7 +463,7 @@ void WaveParticleSystem::drawGradient(int _x, int _y, int _w, int _h, float _pos
     ofTranslate(_x, _y);
     
     
-    float inc = NUM_ARRAY/_w;
+    float inc = waveParticles.size()/_w;
     
     float incTex = _texture.getWidth() / _w;
     float texHeight = _texture.getHeight();
@@ -470,21 +474,38 @@ void WaveParticleSystem::drawGradient(int _x, int _y, int _w, int _h, float _pos
     mesh.enableTextures();
     mesh.setMode(OF_PRIMITIVE_TRIANGLES);
     
+    float min = 0;
+    float max = 0;
+    
+    for(int i = 0; i <= _w; i++){
+        float pValue = waveParticles[i*inc].p*-1;
+        if(pValue < min) min = pValue;
+        if(pValue > max) max = pValue;
+        
+    }
+
+    
     
     for(int i = 0; i <= _w; i++){
         
         float x = i;
         float y = (waveParticles[i*inc].p/2+1-_posHWave)*_h;
+        ofFloatColor pColor = ofFloatColor(1., ofMap( waveParticles[i*inc].p*-1, min, max, 0.8, 1, true));
         
         
         mesh.addVertex(ofVec3f(x, 0, 0));
         mesh.addTexCoord(ofVec2f(x,0));
+        mesh.addColor(pColor);
         
         mesh.addVertex(ofVec3f(x, y, 0));
         mesh.addTexCoord(ofVec2f(x,texHalfHeight));
+        mesh.addColor(pColor);
+
         
         mesh.addVertex(ofVec3f(x, _h, 0));
         mesh.addTexCoord(ofVec2f(x,texHeight));
+        mesh.addColor(pColor);
+
 
 
     }
@@ -514,75 +535,7 @@ void WaveParticleSystem::drawGradient(int _x, int _y, int _w, int _h, float _pos
     _texture.bind();
     mesh.draw();
     _texture.unbind();
-
     
     ofPopMatrix();
-
-    
-  /*  ofPushMatrix();
-    ofTranslate(_x, _y);
-    
-    float inc = (float)NUM_ARRAY/_w;
-    
-    float incTex = _texture.getWidth() / _w;
-    float texHeight = _texture.getHeight();
-    float texHalfHeight = texHeight/2;
-
-    
-    //ofVboMesh mesh;
-    
-     ofMesh mesh;
-    mesh.clear();
-    mesh.enableTextures();
-    mesh.setMode(OF_PRIMITIVE_TRIANGLES);
-    
-    
-    for(int i = 0; i < _w; i++){
-        
-        // Mesh for the BG
-        int texCoord_x = i*incTex;
-        
-        mesh.addVertex(ofPoint(i, 0));
-        mesh.addTexCoord(ofVec2f(texCoord_x, 0.));
-        
-        
-        mesh.addVertex(ofVec2f(i, (waveParticles[i*inc].p/2+1-_posHWave)*_h));
-        mesh.addTexCoord(ofVec2f(texCoord_x, texHalfHeight));
-        
-        
-        mesh.addVertex(ofPoint(i, _h));
-        mesh.addTexCoord(ofPoint(texCoord_x, texHeight));
-        
-    }
-   // cout << "numOfVerices "<< ofToString(mesh.getNumVertices()) << "\n";
-
-    
-    for(int i = 0; i < mesh.getNumVertices()/3-1; i++){
-        
-        mesh.addIndex(i*2+1);
-        mesh.addIndex(i*2+3);
-        mesh.addIndex(i*2+0);
-        
-        mesh.addIndex(i*2+1);
-        mesh.addIndex(i*2+4);
-        mesh.addIndex(i*2+3);
-        
-        mesh.addIndex(i*2+2);
-        mesh.addIndex(i*2+4);
-        mesh.addIndex(i*2+1);
-        
-        mesh.addIndex(i*2+2);
-        mesh.addIndex(i*2+5);
-        mesh.addIndex(i*2+4);
-        
-    }
-    
-    ofSetColor( 255, 255, 255 );  //Set white color
-    _texture.bind();
-    mesh.draw();
-    _texture.unbind();
-    
-    ofPopMatrix();
-    */
 }
 

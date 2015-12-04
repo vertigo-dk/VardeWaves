@@ -16,8 +16,7 @@
 
 // Physics
 
-#define NUM_ARRAY 100 //ggV 58 & 32
-
+#define NUM_ARRAY 100
 #define DAMPING 0.96
 #define ATTACK  0.04
 

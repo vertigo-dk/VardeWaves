@@ -81,7 +81,7 @@ public:
         ofFill();
         ofSetLineWidth(0.);
         ofDrawRectangle(location.x,location.y, 1,1);
-
+        
     }
     
     // Is the particle still useful?
@@ -101,23 +101,23 @@ public:
     ofVec2f location2;
     float offset1, offset2;
     float   freedom;
-    float speed;
+    float sync;
     float seedOffset;
-
+    
     ofColor lineColor;
     
     DancingLine() {
-        speed = 4;
         lineColor = ofColor(0);
         seedOffset = ofRandom(1000);
         freedom = 100;
+        sync = 1;
     }
     
     // Method to update location
     void update(float _timer) {
-        offset1 = freedom * ((ofNoise(_timer*speed+seedOffset))*1.8-0.4);
-        offset2 = freedom * ((ofNoise(_timer*1.5*speed+seedOffset))*1.8-0.4);
-
+        offset1 = freedom * ((ofNoise(_timer+seedOffset))*1.8-0.4);
+        offset2 = freedom * ((ofNoise(_timer*sync+seedOffset))*1.8-0.4);
+        
     }
     // Method to display
     void draw() {
@@ -140,6 +140,12 @@ public:
     float attack;
     float damping;
     
+    WaveParticle(){
+        p = v = a = 0;
+        attack = 0;
+        damping = 0;
+    }
+    
     void setResponse(float _attack, float _damping){
         attack = _attack;
         damping = _damping;
@@ -160,7 +166,7 @@ class WaveParticleSystem{
 public:
     vector<WaveParticle> waveParticles;
     
-    void setup();
+    void setup(int _numArray);
     void updateResponse(float _attack, float _damping);
     void update(float _inLeft, float _inRight);
     void drawLine(int _x, int _y,int _w, int _h, ofColor colorLine, float _posHLine, int _lineWidth);
@@ -193,7 +199,8 @@ public:
     
     
     ofxPanel gui;
-    ofParameterGroup visualControl;
+    ofParameterGroup WaveControl;
+    
     ofParameter<float> inLeft;
     ofParameter<float> inRight;
     ofParameter<float> noiseAmt;
@@ -206,22 +213,22 @@ public:
     
     
     
-    ofParameter<ofColor> colorBG;
     ofParameter<ofColor> colorLine;
-    ofParameter<ofColor> colorBGTop;
-    ofParameter<ofColor> colorBGBot;
-    ofParameter<ofColor> colorWaveTop;
-    ofParameter<ofColor> colorWaveBot;
+    ofParameter<ofColor> colorTopTop;
+    ofParameter<ofColor> colorTopBot;
+    ofParameter<ofColor> colorBotTop;
+    ofParameter<ofColor> colorBotBot;
     
+    ofParameter<float> updateRequest;
     
     ofxOscParameterSync syncOSC;
     
     
     
-
+    
     //ofFbo grafic_RGB_Pole;
     //ofFbo grafic_RGB_Ramp;
-
+    
     ofFbo grafic_W_Pole;
     ofFbo grafic_W_Ramp;
     
@@ -236,38 +243,38 @@ public:
     
     // Blinkende Lyger
     // GUI / Controlpanel
-    ofParameterGroup paramBlinkendeLyter;
-    ofParameter<float> tempo;
-    ofParameter<float> intensityBlink;
+    ofParameter<float> blinkTempo;
+    ofParameter<float> blinkIntensity;
     ofParameter<bool> hard_soft;
-    ofParameter<ofColor> colorLygter;
+    ofParameter<ofColor> colorBlink;
     // BlinkendeLygter
     vector<Lygte> lygter;
     ofFbo graficBlinkendeLygter;
-
+    
     
     // Boubbles Lyger
     // GUI / Controlpanel
-    ofParameterGroup paramBoubbles;
-    ofParameter<float> intensityBoubbles;
-    ofParameter<float> velMin;
-    ofParameter<float> velMax;
-
+    ofParameter<float> boubblesIntensity;
+    ofParameter<float> boubblesVelMin;
+    ofParameter<float> boubblesVelMax;
+    
     ofParameter<ofColor> colorBoubbles;
     // BlinkendeLygter
     vector<Boubble> boubbles;
     ofFbo graficBoubbles;
-
+    
     
     // dancing Lines
     // GUI / Controlpanel
-    ofParameterGroup paramLines;
-    ofParameter<float> speed;
-    
-    ofParameter<ofColor> colorDLines;
+    ofParameter<float> dLinesSpeed;
+    ofParameter<float> dLinesSync;
 
+    ofParameter<ofColor> colorDLines;
+    
     vector<DancingLine> dancingLinesPole;
     vector<DancingLine> dancingLinesRamp;
+    
+    float counterDLines;
     
     ofFbo fboTexPoles;
     ofFbo fboTexRamp;

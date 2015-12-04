@@ -30,4 +30,26 @@
 		<speed>0.0663265</speed>
 		<colorDLines>0, 132, 0, 255</colorDLines>
 	</DancingLines>
+<WaveControl>
+		<inLeft>0</inLeft>
+		<inRight>0</inRight>
+		<noiseAmt>0.15</noiseAmt>
+		<posHWavePoles>0.5</posHWavePoles>
+		<posHWaveRamp>0.5</posHWaveRamp>
+		<posHLinePoles>0.5</posHLinePoles>
+		<posHLineRamp>0.5</posHLineRamp>
+		<colorTopTop>0, 154, 255, 255</colorTopTop>
+		<colorTopBot>255, 179, 66, 255</colorTopBot>
+		<colorBotTop>0, 105, 255, 255</colorBotTop>
+		<colorBotBot>0, 0, 55, 255</colorBotBot>
+		<colorLine>255, 255, 255, 255</colorLine>
+		<blinkIntensity>0</blinkIntensity>
+		<blinkTempo>0.02</blinkTempo>
+		<hard_soft>1</hard_soft>
+		<boubblesIntensity>0</boubblesIntensity>
+		<boubblesVelMin>0.5</boubblesVelMin>
+		<boubblesVelMax>2</boubblesVelMax>
+		<dLinesSpeed>0.2</dLinesSpeed>
+		<colorDLines>0, 0, 0, 255</colorDLines>
+	</WaveControl>
 </visualControl>
