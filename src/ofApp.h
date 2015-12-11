@@ -6,6 +6,7 @@
 #include "ofxOscParameterSync.h"
 
 #include "defines.h"
+#include "soundreactive.h"
 
 class Lygte{
 public:
