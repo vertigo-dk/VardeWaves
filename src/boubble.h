@@ -6,6 +6,8 @@
 //
 //
 
+#include "ofMain.h"
+
 class Boubble{
 public:
     ofVec2f location;

@@ -14,6 +14,9 @@
 #define RENDER_HEIGHT_RAMP 154
 
 
+#define RENDER_WIDTH_SW 300
+#define RENDER_HEIGHT_SW 288
+
 // Physics
 
 #define NUM_ARRAY 100
@@ -24,6 +27,10 @@
 #define OSCRECEIVEPORT 7000
 #define OSCSENDPORT 7001
 #define OSCHOSTIP   "127.0.0.1"
+
+// osc for soundWave
+#define SWOSCRECEIVEPORT 8000
+#define SWOSCSENDPORT 8001
 
 // Visual
 #define LINE_WIDTH 1

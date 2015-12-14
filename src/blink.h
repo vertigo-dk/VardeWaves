@@ -1,21 +1,23 @@
 //
-//  lygte.h
+//  blink.j
 //  VardeWave_1
 //
 //  Created by Jonas Fehr on 11/12/15.
 //
 //
 
-class Lygte{
+#include "ofMain.h"
+
+class Blink{
 public:
     ofVec2f location;
-    ofColor lygteColor;
+    ofColor blinkColor;
     float tempo;
     bool hard_soft = false;
     
     float lifespan;
     
-    Lygte() {
+    Blink() {
         lifespan = 1.0;
         tempo = 0.01;
     }
@@ -36,8 +38,8 @@ public:
             
         }
         
-        lygteColor.a = alpha*255;
-        ofSetColor(lygteColor);
+        blinkColor.a = alpha*255;
+        ofSetColor(blinkColor);
         ofFill();
         ofSetLineWidth(0.);
         

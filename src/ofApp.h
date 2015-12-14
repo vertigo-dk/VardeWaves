@@ -6,174 +6,12 @@
 #include "ofxOscParameterSync.h"
 
 #include "defines.h"
-#include "soundreactive.h"
+#include "soundWaveSystem.h"
+#include "blink.h"
+#include "boubble.h"
+#include "dancingLine.h"
+#include "waveSystem.h"
 
-class Lygte{
-public:
-    ofVec2f location;
-    ofColor lygteColor;
-    float tempo;
-    bool hard_soft = false;
-    
-    float lifespan;
-    
-    Lygte() {
-        lifespan = 1.0;
-        tempo = 0.01;
-    }
-    
-    // Method to update location
-    void update() {
-        lifespan -= tempo;
-        
-    }
-    // Method to display
-    void draw() {
-        
-        float alpha;
-        if(hard_soft){
-            alpha = (sin(PI*(1-lifespan)+HALF_PI)+1)/2;
-        }else{
-            alpha = (cos(PI*(1-lifespan))+1)/2;
-            
-        }
-        
-        lygteColor.a = alpha*255;
-        ofSetColor(lygteColor);
-        ofFill();
-        ofSetLineWidth(0.);
-        
-        ofDrawRectangle(location.x,location.y, 1,1);
-        //ofLine(location.x,location.y, location.x+5, location.y);
-        //ofCircle(location.x,location.y,8);
-    }
-    
-    // Is the particle still useful?
-    bool isDead() {
-        if (lifespan < 0.0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-};
-
-class Boubble{
-public:
-    ofVec2f location;
-    ofVec2f velocity;
-    ofColor boubbleColor;
-    
-    Boubble() {
-        velocity = ofVec2f(0., - ofRandom(0.1, 2.));
-    }
-    
-    // Method to update location
-    void update() {
-        location.operator+=(velocity);
-        
-    }
-    // Method to display
-    void draw() {
-        
-        
-        ofSetColor(boubbleColor);
-        ofFill();
-        ofSetLineWidth(0.);
-        ofDrawRectangle(location.x,location.y, 1,1);
-        
-    }
-    
-    // Is the particle still useful?
-    bool isDead() {
-        if(location.y < 0){
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-};
-
-class DancingLine{
-public:
-    ofVec2f location1;
-    ofVec2f location2;
-    float offset1, offset2;
-    float   freedom;
-    float sync;
-    float seedOffset;
-    
-    ofColor lineColor;
-    
-    DancingLine() {
-        lineColor = ofColor(0);
-        seedOffset = ofRandom(1000);
-        freedom = 100;
-        sync = 1;
-    }
-    
-    // Method to update location
-    void update(float _timer) {
-        offset1 = freedom * ((ofNoise(_timer+seedOffset))*1.8-0.4);
-        offset2 = freedom * ((ofNoise(_timer*sync+seedOffset))*1.8-0.4);
-        
-    }
-    // Method to display
-    void draw() {
-        
-        
-        ofSetColor(lineColor);
-        ofSetLineWidth(1.);
-        ofDrawLine(location1.x, location1.y+offset1,location2.x, location2.y+offset2);
-        
-    }
-};
-
-class WaveParticle {
-    
-    // Inspired by http://vvvv.org/documentation/wave-simulation
-public:
-    float p;
-    float v;
-    float a;
-    float attack;
-    float damping;
-    
-    WaveParticle(){
-        p = v = a = 0;
-        attack = 0;
-        damping = 0;
-    }
-    
-    void setResponse(float _attack, float _damping){
-        attack = _attack;
-        damping = _damping;
-    }
-    
-    void calcAccel(float p_left, float p_right);
-    
-    void update( float p_left, float p_right ){
-        float delta_p = p_left + p_right - 2*p;
-        a = attack * delta_p;
-        v = (v + a) * damping;
-        p = p + v;
-    }
-};
-
-
-class WaveParticleSystem{
-public:
-    vector<WaveParticle> waveParticles;
-    
-    void setup(int _numArray);
-    void updateResponse(float _attack, float _damping);
-    void update(float _inLeft, float _inRight);
-    void drawLine(int _x, int _y,int _w, int _h, ofColor colorLine, float _posHLine, int _lineWidth);
-    void drawGradient(int _x, int _y, int _w, int _h, float _posHWave , ofTexture& _texture);
-    
-};
 
 
 
@@ -249,7 +87,7 @@ public:
     ofParameter<bool> hard_soft;
     ofParameter<ofColor> colorBlink;
     // BlinkendeLygter
-    vector<Lygte> lygter;
+    vector<Blink> blinks;
     ofFbo graficBlinkendeLygter;
     
     
@@ -280,5 +118,10 @@ public:
     ofFbo fboTexPoles;
     ofFbo fboTexRamp;
     
+    
+    // soundWaves (mic input)
+    ofxOscReceiver receiveOscSoundWave;
+
+    SoundWaveSystem sWSystem;
 };
 
