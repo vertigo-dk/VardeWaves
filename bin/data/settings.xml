@@ -51,5 +51,20 @@
 		<boubblesVelMax>2</boubblesVelMax>
 		<dLinesSpeed>0.2</dLinesSpeed>
 		<colorDLines>0, 0, 0, 255</colorDLines>
+	<colorBlink>255, 255, 255, 255</colorBlink>
+		<colorBoubbles>255, 255, 255, 255</colorBoubbles>
+		<dLinesSync>0.9</dLinesSync>
+		<Flock>
+			<flockIntensity>0.841837</flockIntensity>
+			<maxForce>1.27551</maxForce>
+			<maxSpeed>2.7449</maxSpeed>
+			<desiredSeparation>16.3265</desiredSeparation>
+			<neighbourDist>26.5306</neighbourDist>
+			<weightSeparation>1.47959</weightSeparation>
+			<weightAlign>1</weightAlign>
+			<weightCohesion>0</weightCohesion>
+			<numOfBoids>51</numOfBoids>
+		</Flock>
+		<updateRequest>0</updateRequest>
 	</WaveControl>
 </visualControl>

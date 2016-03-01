@@ -36,6 +36,8 @@
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */; };
 		FF18A0931C1B05B100BBD05E /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF18A0911C1B05B100BBD05E /* ofApp.cpp */; };
+		FFF6E9FB1C843CE800D9F923 /* Boid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FFF6E9F71C843CE800D9F923 /* Boid.cpp */; };
+		FFF6E9FC1C843CE800D9F923 /* FlockSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FFF6E9F91C843CE800D9F923 /* FlockSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +144,10 @@
 		FF18A0911C1B05B100BBD05E /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
 		FF18A0921C1B05B100BBD05E /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
 		FF18A0941C1B068F00BBD05E /* waveSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = waveSystem.h; sourceTree = "<group>"; };
+		FFF6E9F71C843CE800D9F923 /* Boid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Boid.cpp; sourceTree = "<group>"; };
+		FFF6E9F81C843CE800D9F923 /* Boid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Boid.h; sourceTree = "<group>"; };
+		FFF6E9F91C843CE800D9F923 /* FlockSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FlockSystem.cpp; sourceTree = "<group>"; };
+		FFF6E9FA1C843CE800D9F923 /* FlockSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlockSystem.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -399,6 +405,10 @@
 		FF18A0951C1B08DB00BBD05E /* classes */ = {
 			isa = PBXGroup;
 			children = (
+				FFF6E9F71C843CE800D9F923 /* Boid.cpp */,
+				FFF6E9F81C843CE800D9F923 /* Boid.h */,
+				FFF6E9F91C843CE800D9F923 /* FlockSystem.cpp */,
+				FFF6E9FA1C843CE800D9F923 /* FlockSystem.h */,
 				FF18A08C1C1B03EA00BBD05E /* soundWaveSystem.h */,
 				FF18A08E1C1B054300BBD05E /* blink.h */,
 				FF18A08F1C1B055100BBD05E /* dancingLine.h */,
@@ -509,6 +519,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF6E9FB1C843CE800D9F923 /* Boid.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
@@ -520,6 +531,7 @@
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
 				72A929D3561B8232A182ABFC /* ofxOscBundle.cpp in Sources */,
+				FFF6E9FC1C843CE800D9F923 /* FlockSystem.cpp in Sources */,
 				B701F3C81BCD2D4B006B8D58 /* SyphonNameboundClient.m in Sources */,
 				5864AD82E20F15536D054EA3 /* ofxOscMessage.cpp in Sources */,
 				4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */,

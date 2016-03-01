@@ -5,17 +5,24 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "7F2919F2D45E8EF9CF51C5983185C66CAA7184C5" : 0,
-    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : 0
+    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : 0,
+    "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "27ECC04F-C3C6-4C4A-B6E4-379DC163E1E5",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "7F2919F2D45E8EF9CF51C5983185C66CAA7184C5" : "VardeWaves",
-    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : "addons\/ofxSyphon"
+    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : "addons\/ofxSyphon",
+    "2DE9C8846D9375EAACFABA8963120E8E7719BAF5" : "..\/.."
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "VardeWave_1",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "VardeWave_1.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/openframeworks\/openFrameworks.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2DE9C8846D9375EAACFABA8963120E8E7719BAF5"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/vertigo-dk\/VardeWaves.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",

@@ -66,10 +66,7 @@ void ofApp::setup(){
     WaveControl.add(boubblesVelMin.set("boubblesVelMin", 0.5, 0.0, 5.0));
     WaveControl.add(boubblesVelMax.set("boubblesVelMax", 2., 0.0, 5.0));
     WaveControl.add(colorBoubbles.set("colorBoubbles", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
-    
-    
-    
-    
+
     
     // Dancing Lines
     
@@ -101,10 +98,49 @@ void ofApp::setup(){
     }
     
     
+    
+    
+    // setup the control panel
+    Flock.setName("Flock");
+    Flock.add(flockIntensity.set("flockIntensity", 0., 0. , 1.));
+    Flock.add(flockIntensityDay.set("flockIntensityDay", 0., 0. , 1.));
+
+    Flock.add(maxForce.set("maxForce", 1.45, 1 , 10));
+    Flock.add(maxSpeed.set("maxSpeed", 1.87, 1 , 10));
+    Flock.add(desiredSeparation.set("desiredSeparation", 20, 0 , 100));
+    Flock.add(neighbourDist.set("neighbourDist", 25, 0 , 100));
+    Flock.add(weightSeparation.set("weightSeparation", 0.75, 0. , 2.));
+    Flock.add(weightAlign.set("weightAlign", .95, 0. , 2.));
+    Flock.add(weightCohesion.set("weightCohesion", .75, 0. , 2.));
+    Flock.add(numOfBoids.set("numOfBoids", 50, 1, 500));
+    
+    flockSystem.maxSpeed = maxSpeed;
+    flockSystem.maxForce = maxForce;
+    flockSystem.neighbourdist = neighbourDist;
+    flockSystem.desiredseparation = desiredSeparation;
+    flockSystem.weightSep = weightSeparation;
+    flockSystem.weightAli = weightAlign;
+    flockSystem.weightCoh = weightCohesion;
+    flockSystem.minimumDistance = desiredSeparation;
+    flockSystem.numOfBoids = (int)numOfBoids;
+    
+    flockSystem.update();
+    
+    WaveControl.add(Flock);
+    
+    // Setup GUI
     WaveControl.add(updateRequest.set("updateRequest",0, 0, 1));
     
     gui.setup(WaveControl);
     
+    gui.minimizeAll();
+    
+    
+    // Setup Flock
+    flockSystem.setup(numOfBoids, ofVec2f(0,0), RENDER_HEIGHT_POLE);
+    // flockSystem.startThread();
+    numOfBoids = 100;
+
     
     // SETUP FOR OSC
     syncOSC.setup((ofParameterGroup&)gui.getParameter(),OSCRECEIVEPORT,"localhost",OSCSENDPORT);
@@ -115,6 +151,9 @@ void ofApp::setup(){
     updateRequest = 1;
     syncOSC.update();
     updateRequest = 0;
+    
+    
+    
     
     
     // osc receiver to make soundWaves
@@ -239,6 +278,20 @@ void ofApp::update(){
     // Update soundWaves
     sWSystem.update();
     
+    // update Flock;
+    // update the control Values
+    flockSystem.maxSpeed = maxSpeed;
+    flockSystem.maxForce = maxForce;
+    flockSystem.neighbourdist = neighbourDist;
+    flockSystem.desiredseparation = desiredSeparation;
+    flockSystem.weightSep = weightSeparation;
+    flockSystem.weightAli = weightAlign;
+    flockSystem.weightCoh = weightCohesion;
+    flockSystem.minimumDistance = desiredSeparation;
+    flockSystem.numOfBoids = (int)numOfBoids;
+    flockSystem.update();
+    
+    
     
     
     fboTexPoles.begin();
@@ -247,6 +300,11 @@ void ofApp::update(){
         dancingLinesPole[i].draw();
     }
     ofRectGradient(0,0, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
+    
+    if(flockIntensity > 0.){
+        
+        flockSystem.draw(0, fboTexPoles.getHeight()/2, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, ofColor(255,int(255*flockIntensity)));
+    }
     fboTexPoles.end();
     
     
@@ -283,12 +341,15 @@ void ofApp::update(){
     wave_poles.drawGradient(0,0,                RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, posHWavePoles, fboTexPoles.getTexture());
     wave_ramp.drawGradient( RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, posHWaveRamp, fboTexRamp.getTexture());
    
+    if(flockIntensityDay > 0.){
+        flockSystem.draw(0,RENDER_HEIGHT_POLE*(1.-posHLinePoles),RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE-(RENDER_HEIGHT_POLE*(1.-posHLinePoles)), ofColor(255,int(255*flockIntensityDay)));
+    }
+    
     // Line
     wave_poles.drawLine(0,0,                RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, colorLine, posHLinePoles, LINE_WIDTH);
     wave_ramp.drawLine( RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, colorLine, posHLineRamp, LINE_WIDTH);
     
-    
-    
+
     graficBlinkendeLygter.draw(0,0);//RENDER_HEIGHT_POLE);
     graficBoubbles.draw(0,0);//RENDER_HEIGHT_POLE);
     

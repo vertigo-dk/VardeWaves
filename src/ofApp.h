@@ -11,6 +11,8 @@
 #include "boubble.h"
 #include "dancingLine.h"
 #include "waveSystem.h"
+#include "flockSystem.h"
+
 
 
 
@@ -123,5 +125,32 @@ public:
     ofxOscReceiver receiveOscSoundWave;
 
     SoundWaveSystem sWSystem;
+
+    // Flocking
+    FlockSystem flockSystem;
+    
+    ofParameterGroup Flock;
+    
+    ofParameter<float> flockIntensity;
+    ofParameter<float> flockIntensityDay;
+
+    ofParameter<float> maxForce;
+    ofParameter<float> maxSpeed;
+    ofParameter<float> desiredSeparation;
+    ofParameter<float> neighbourDist;
+    ofParameter<float> weightSeparation;
+    ofParameter<float> weightAlign;
+    ofParameter<float> weightCohesion;
+    ofParameter<float> characterUser;
+    ofParameter<float> attractionUser;
+    ofParameter<float> repulsionUser;
+    ofParameter<float> minDistUser;
+    
+    ofParameter<int> numOfBoids;
+    int numOfBoidsLast;
+    
+    
+
+
 };
 
