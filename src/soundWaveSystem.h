@@ -88,7 +88,7 @@ public:
         }
     }
     
-    void draw(int _x, int _y, int _w, int _h){
+    void draw(int _x, int _y, int _w, int _h, bool flip){
         renderer.begin();
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -97,8 +97,12 @@ public:
            soundWaves[i].draw(width);
         }
         renderer.end();
-        
-        renderer.draw(_x, _y, _w, _h);
+        if(flip){
+            renderer.draw(_x+_w, _y, -_w, _h);
+        }
+        else{
+            renderer.draw(_x, _y, _w, _h);
+        }
     }
     
     void addSoundWave(ofVec2f _center, float _strength){

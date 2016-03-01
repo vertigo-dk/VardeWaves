@@ -105,26 +105,18 @@ void ofApp::setup(){
     Flock.add(flockIntensity.set("flockIntensity", 0., 0. , 1.));
     Flock.add(flockIntensityDay.set("flockIntensityDay", 0., 0. , 1.));
 
-    Flock.add(maxForce.set("maxForce", 1.45, 1 , 10));
-    Flock.add(maxSpeed.set("maxSpeed", 1.87, 1 , 10));
+    Flock.add(maxForce.set("maxForce", 0.5, 0.1 , 10));
+    Flock.add(maxSpeed.set("maxSpeed", 2, 1 , 10));
     Flock.add(desiredSeparation.set("desiredSeparation", 20, 0 , 100));
-    Flock.add(neighbourDist.set("neighbourDist", 25, 0 , 100));
-    Flock.add(weightSeparation.set("weightSeparation", 0.75, 0. , 2.));
-    Flock.add(weightAlign.set("weightAlign", .95, 0. , 2.));
-    Flock.add(weightCohesion.set("weightCohesion", .75, 0. , 2.));
-    Flock.add(numOfBoids.set("numOfBoids", 50, 1, 500));
+    Flock.add(neighbourDist.set("neighbourDist", 27, 0 , 100));
+    Flock.add(weightSeparation.set("weightSeparation", 1.5, 0. , 2.));
+    Flock.add(weightAlign.set("weightAlign", 1, 0. , 2.));
+    Flock.add(weightCohesion.set("weightCohesion", 1, 0. , 2.));
+    Flock.add(numOfBoids.set("numOfBoids", 35, 1, 500));
     
-    flockSystem.maxSpeed = maxSpeed;
-    flockSystem.maxForce = maxForce;
-    flockSystem.neighbourdist = neighbourDist;
-    flockSystem.desiredseparation = desiredSeparation;
-    flockSystem.weightSep = weightSeparation;
-    flockSystem.weightAli = weightAlign;
-    flockSystem.weightCoh = weightCohesion;
-    flockSystem.minimumDistance = desiredSeparation;
-    flockSystem.numOfBoids = (int)numOfBoids;
     
-    flockSystem.update();
+    
+
     
     WaveControl.add(Flock);
     
@@ -138,8 +130,12 @@ void ofApp::setup(){
     
     // Setup Flock
     flockSystem.setup(numOfBoids, ofVec2f(0,0), RENDER_HEIGHT_POLE);
+    flockSystem.setAllDesiredsep(desiredSeparation);
+   // flockSystem.setAllMax(maxForce, maxSpeed);
+    flockSystem.setAllNeighbourdist(neighbourDist);
+    flockSystem.setAllWheigts(weightSeparation, weightSeparation, weightCohesion);
+    
     // flockSystem.startThread();
-    numOfBoids = 100;
 
     
     // SETUP FOR OSC
@@ -353,8 +349,8 @@ void ofApp::update(){
     graficBlinkendeLygter.draw(0,0);//RENDER_HEIGHT_POLE);
     graficBoubbles.draw(0,0);//RENDER_HEIGHT_POLE);
     
-    sWSystem.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE);
-    sWSystem.draw(RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP);
+    sWSystem.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, true);
+    sWSystem.draw(RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, false);
     
     //ofRectGradient(,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     

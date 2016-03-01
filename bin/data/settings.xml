@@ -55,15 +55,16 @@
 		<colorBoubbles>255, 255, 255, 255</colorBoubbles>
 		<dLinesSync>0.9</dLinesSync>
 		<Flock>
-			<flockIntensity>0.841837</flockIntensity>
-			<maxForce>1.27551</maxForce>
-			<maxSpeed>2.7449</maxSpeed>
-			<desiredSeparation>16.3265</desiredSeparation>
-			<neighbourDist>26.5306</neighbourDist>
-			<weightSeparation>1.47959</weightSeparation>
+			<flockIntensity>1</flockIntensity>
+			<maxForce>0.5</maxForce>
+			<maxSpeed>2</maxSpeed>
+			<desiredSeparation>20</desiredSeparation>
+			<neighbourDist>25</neighbourDist>
+			<weightSeparation>1.5</weightSeparation>
 			<weightAlign>1</weightAlign>
-			<weightCohesion>0</weightCohesion>
-			<numOfBoids>51</numOfBoids>
+			<weightCohesion>1</weightCohesion>
+			<numOfBoids>100</numOfBoids>
+		<flockIntensityDay>0</flockIntensityDay>
 		</Flock>
 		<updateRequest>0</updateRequest>
 	</WaveControl>

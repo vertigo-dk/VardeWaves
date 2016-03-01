@@ -45,7 +45,7 @@ void FlockSystem::setup(float numOfBoids_, ofVec2f gravity_, int diameter_) {
 }
 
 void FlockSystem::update() {
-  /* //  lock();
+   //  lock();
     attractionU = attraction;
     numOfBoidsU = numOfBoids;
     
@@ -62,7 +62,7 @@ void FlockSystem::update() {
     predatorsThread = predators;
     boidsThread = boids;
     
-   // unlock(); */
+   // unlock(); 
     
     if(attractionU != attractionLast){
         setAllAttractors(attractionU);
@@ -275,7 +275,7 @@ void FlockSystem::addNewBoid(){
     
     float mass = 5;
     
-    ofVec2f initialVelocity = ofVec2f(ofRandom(-maxSpeed,maxSpeed),ofRandom(-maxSpeed,maxSpeed));
+    ofVec2f initialVelocity = ofVec2f(ofRandom(-10,10),ofRandom(-10,10));
     ofVec2f origin = ofVec2f( ofRandom(renderSize), ofRandom(renderSize));
 
     

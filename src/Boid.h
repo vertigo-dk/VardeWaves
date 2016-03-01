@@ -17,7 +17,7 @@ public:
     float attraction;
     float repulsion;
     float reactionDist;
-    ofVec2f velocity = ofVec2f(0,0);
+    ofVec2f velocity = ofVec2f(0,0.01);
     ofVec2f head;
     
     void draw();
