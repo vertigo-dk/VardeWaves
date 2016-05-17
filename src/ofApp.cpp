@@ -24,8 +24,10 @@ void ofApp::setup(){
     
     
     render.begin();
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    {
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
     render.end();
     
     WaveControl.setName("WaveControl");
@@ -43,7 +45,7 @@ void ofApp::setup(){
     WaveControl.add(colorBotTop.set("colorBotTop", ofColor(0,105,255,255), ofColor(0,0),ofColor(255)));
     WaveControl.add(colorBotBot.set("colorBotBot", ofColor(0,0,55), ofColor(0,0),ofColor(255)));
     WaveControl.add(colorLine.set("colorLine", ofColor(255,255), ofColor(0,0),ofColor(255)));
-
+    
     
     
     
@@ -66,7 +68,7 @@ void ofApp::setup(){
     WaveControl.add(boubblesVelMin.set("boubblesVelMin", 0.5, 0.0, 5.0));
     WaveControl.add(boubblesVelMax.set("boubblesVelMax", 2., 0.0, 5.0));
     WaveControl.add(colorBoubbles.set("colorBoubbles", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
-
+    
     
     // Dancing Lines
     
@@ -75,7 +77,7 @@ void ofApp::setup(){
     // Control
     WaveControl.add(dLinesSpeed.set("dLinesSpeed", .2, 0.0, 1));
     WaveControl.add(dLinesSync.set("dLinesSync", .9, 0.5, 1));
-
+    
     WaveControl.add(colorDLines.set("colorDLines", ofColor(0,255), ofColor(0,0), ofColor(255,255)));
     
     for(int i = 0; i < 10; i++){
@@ -98,13 +100,23 @@ void ofApp::setup(){
     }
     
     
+    // Drops
+    WaveControl.add(dropsVelMin.set("dropsVelMin", 0.001, 0.0, .2));
+    WaveControl.add(dropsVelMax.set("dropsVelMax", 0.1, 0.0, .5));
+    WaveControl.add(dropsDragLimit.set("dropsDragLimit", 0.1, 0.0, .5));
+    WaveControl.add(dropsExtraMass.set("dropsExtraMass", 0.01, 0.0, .1));
+    
+    
+    WaveControl.add(colorDrops.set("colorDrops", ofColor(255,255), ofColor(0,0), ofColor(255,255)));
+    
+    
     
     
     // setup the control panel
     Flock.setName("Flock");
     Flock.add(flockIntensity.set("flockIntensity", 0., 0. , 1.));
     Flock.add(flockIntensityDay.set("flockIntensityDay", 0., 0. , 1.));
-
+    
     Flock.add(maxForce.set("maxForce", 0.5, 0.1 , 10));
     Flock.add(maxSpeed.set("maxSpeed", 2, 1 , 10));
     Flock.add(desiredSeparation.set("desiredSeparation", 20, 0 , 100));
@@ -113,10 +125,11 @@ void ofApp::setup(){
     Flock.add(weightAlign.set("weightAlign", 1, 0. , 2.));
     Flock.add(weightCohesion.set("weightCohesion", 1, 0. , 2.));
     Flock.add(numOfBoids.set("numOfBoids", 35, 1, 500));
+    Flock.add(colorFlock.set("colorFlock", ofColor(0,255), ofColor(0,0), ofColor(255,255)));
     
     
     
-
+    
     
     WaveControl.add(Flock);
     
@@ -131,18 +144,18 @@ void ofApp::setup(){
     // Setup Flock
     flockSystem.setup(numOfBoids, ofVec2f(0,0), RENDER_HEIGHT_POLE);
     flockSystem.setAllDesiredsep(desiredSeparation);
-   // flockSystem.setAllMax(maxForce, maxSpeed);
+    // flockSystem.setAllMax(maxForce, maxSpeed);
     flockSystem.setAllNeighbourdist(neighbourDist);
     flockSystem.setAllWheigts(weightSeparation, weightSeparation, weightCohesion);
     
     // flockSystem.startThread();
-
+    
     
     // SETUP FOR OSC
     syncOSC.setup((ofParameterGroup&)gui.getParameter(),OSCRECEIVEPORT,"localhost",OSCSENDPORT);
     
-   // colorBlink = ofColor(255);
-   // colorBoubbles = ofColor(255);
+    // colorBlink = ofColor(255);
+    // colorBoubbles = ofColor(255);
     
     updateRequest = 1;
     syncOSC.update();
@@ -154,14 +167,14 @@ void ofApp::setup(){
     
     // osc receiver to make soundWaves
     
-    receiveOscSoundWave.setup(SWOSCRECEIVEPORT);
+    receiveOscTriggers.setup(TRIGGER_OSCRECEIVEPORT);
     
     sWSystem.setup(RENDER_WIDTH_SW, RENDER_HEIGHT_SW);
     
-
     
     
-
+    
+    
     
 }
 
@@ -170,6 +183,7 @@ void ofApp::update(){
     
     syncOSC.update();
     
+    // waveSystem
     
     // Blinkedne blinks
     for(int i = 0; i < 10 ; i++){
@@ -221,10 +235,12 @@ void ofApp::update(){
     }
     
     graficBoubbles.begin();
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for(int i = 0; i < boubbles.size(); i++){
-        boubbles[i].draw();
+    {
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        for(int i = 0; i < boubbles.size(); i++){
+            boubbles[i].draw();
+        }
     }
     graficBoubbles.end();
     
@@ -251,10 +267,10 @@ void ofApp::update(){
     
     // OSC soundWaveReceive
     // check for waiting messages
-    while(receiveOscSoundWave.hasWaitingMessages()){
+    while(receiveOscTriggers.hasWaitingMessages()){
         // get the next message
         ofxOscMessage m;
-        receiveOscSoundWave.getNextMessage(m);
+        receiveOscTriggers.getNextMessage(m);
         cout << "oscReceive: "<< m.getAddress() << " " << ofToString(m.getArgAsFloat(0)) << "\n";
         
         // check for mouse moved message
@@ -270,9 +286,17 @@ void ofApp::update(){
             sWSystem.addSoundWave(ofVec2f(0, RENDER_HEIGHT_SW/2), strength);
         }
         
+        // check for mouse button message
+        else if(m.getAddress() == "/waveSystem/addDrop/"){
+            float  strength = m.getArgAsFloat(0);
+            wave_poles.addDrop(ofMap(strength, 0., 1., dropsVelMin, dropsVelMax));
+        }
+        
     }
     // Update soundWaves
     sWSystem.update();
+    
+    
     
     // update Flock;
     // update the control Values
@@ -291,26 +315,36 @@ void ofApp::update(){
     
     
     fboTexPoles.begin();
-    ofRectGradient(0, fboTexPoles.getHeight()/2, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorBotTop, colorBotBot, OF_GRADIENT_LINEAR);
-    for(int i = 0; i < dancingLinesPole.size(); i++){
-        dancingLinesPole[i].draw();
-    }
-    ofRectGradient(0,0, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
-    
-    if(flockIntensity > 0.){
+    {
+        ofRectGradient(0, fboTexPoles.getHeight()/2, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorBotTop, colorBotBot, OF_GRADIENT_LINEAR);
+        for(int i = 0; i < dancingLinesPole.size(); i++){
+            dancingLinesPole[i].draw();
+        }
+        ofRectGradient(0,0, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
         
-        flockSystem.draw(0, fboTexPoles.getHeight()/2, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, ofColor(255,int(255*flockIntensity)));
+        if(flockIntensity > 0.){
+            
+            flockSystem.draw(0, fboTexPoles.getHeight()/2, fboTexPoles.getWidth(), fboTexPoles.getHeight()/2, ofColor(colorFlock->r, colorFlock->g, colorFlock->b,int(255*flockIntensity)));
+        }
     }
     fboTexPoles.end();
     
     
     fboTexRamp.begin();
-    ofRectGradient(0, fboTexRamp.getHeight()/2, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorBotTop, colorBotBot, OF_GRADIENT_LINEAR);
-    for(int i = 0; i < dancingLinesRamp.size(); i++){
-        dancingLinesRamp[i].draw();
+    {
+        ofRectGradient(0, fboTexRamp.getHeight()/2, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorBotTop, colorBotBot, OF_GRADIENT_LINEAR);
+        for(int i = 0; i < dancingLinesRamp.size(); i++){
+            dancingLinesRamp[i].draw();
+        }
+        ofRectGradient(0,0, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     }
-    ofRectGradient(0,0, fboTexRamp.getWidth(), fboTexRamp.getHeight()/2, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     fboTexRamp.end();
+    
+    //
+    //    wave_poles.dropsVelMin = dropsVelMin;
+    //    wave_poles.dropsVelMax = dropsVelMax;
+    wave_poles.dropsDragLimit = dropsDragLimit;
+    wave_poles.dropsExtraMass = dropsExtraMass;
     
     // draw the Waves
     float noiseLeft = noiseAmt*(ofNoise(ofGetElapsedTimef()*4)-0.5);
@@ -321,72 +355,61 @@ void ofApp::update(){
     wave_poles.update(inLeft+noiseLeft, inRight+noiseRight);
     wave_ramp.update( inRight+noiseRight_ramp, inLeft+noiseLeft_ramp);
     
-
-
-//    wave_poles.updateResponse(ATTACK, DAMPING);
-//    wave_ramp.updateResponse(ATTACK, DAMPING);
+    
+    
+    //    wave_poles.updateResponse(ATTACK, DAMPING);
+    //    wave_ramp.updateResponse(ATTACK, DAMPING);
     
     
     // Draw the content into the renderer for syphon publishing.
     
     render.begin();
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    ofSetColor(255,255);
-    
-    wave_poles.drawGradient(0,0,                RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, posHWavePoles, fboTexPoles.getTexture());
-    wave_ramp.drawGradient( RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, posHWaveRamp, fboTexRamp.getTexture());
-   
-    if(flockIntensityDay > 0.){
-        flockSystem.draw(0,RENDER_HEIGHT_POLE*(1.-posHLinePoles),RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE-(RENDER_HEIGHT_POLE*(1.-posHLinePoles)), ofColor(255,int(255*flockIntensityDay)));
+    {
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ofSetColor(255,255);
+        
+        wave_poles.drawGradient(0,0,                RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, posHWavePoles, fboTexPoles.getTexture());
+        wave_ramp.drawGradient( RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, posHWaveRamp, fboTexRamp.getTexture());
+        float posWave = posHWavePoles;
+        if(posHWavePoles < posHLinePoles) posWave = posHLinePoles;
+        wave_poles.drawDrops(0,0,                RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, ofColor::white, posWave);
+        
+        
+        
+        // Line
+        wave_poles.drawLine(0,0,                RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, colorLine, posHLinePoles, LINE_WIDTH);
+        wave_ramp.drawLine( RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, colorLine, posHLineRamp, LINE_WIDTH);
+        
+        if(flockIntensityDay > 0.){
+            // Poles
+            flockSystem.draw(0,RENDER_HEIGHT_POLE*(1.-posHLinePoles),RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE-(RENDER_HEIGHT_POLE*(1.-posHLinePoles)), ofColor(colorFlock->r, colorFlock->g, colorFlock->b,int(255*flockIntensityDay)));
+            // Poles
+            flockSystem.draw(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP*(1.-posHLineRamp),RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP-(RENDER_HEIGHT_RAMP*(1.-posHLineRamp)), ofColor(colorFlock->r, colorFlock->g, colorFlock->b,int(255*flockIntensityDay)));
+        }
+        
+        graficBlinkendeLygter.draw(0,0);//RENDER_HEIGHT_POLE);
+        graficBoubbles.draw(0,0);//RENDER_HEIGHT_POLE);
+        
+        sWSystem.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, true);
+        sWSystem.draw(RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, false);
+        
+        ofSetColor(0,255);
+        ofFill();
+        ofDrawRectangle(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP);
+        ofSetColor(255,255);
+        ofRectGradient(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
     }
-    
-    // Line
-    wave_poles.drawLine(0,0,                RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, colorLine, posHLinePoles, LINE_WIDTH);
-    wave_ramp.drawLine( RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, colorLine, posHLineRamp, LINE_WIDTH);
-    
-
-    graficBlinkendeLygter.draw(0,0);//RENDER_HEIGHT_POLE);
-    graficBoubbles.draw(0,0);//RENDER_HEIGHT_POLE);
-    
-    sWSystem.draw(0,0, RENDER_WIDTH_POLE, RENDER_HEIGHT_POLE, true);
-    sWSystem.draw(RENDER_WIDTH_POLE,0,RENDER_WIDTH_RAMP, RENDER_HEIGHT_RAMP, false);
-    
-    //ofRectGradient(,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
-    
-    ofRectGradient(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
-    
     render.end();
     
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
     syphonRenderOut.publishTexture(&syphonTex);
-
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofBackground(150);
-    
-    //ofSetColor(255);
-    //render.draw(0,0, RENDER_WIDTH, RENDER_HEIGHT);
     gui.draw();
-    
-    
     ofSetWindowTitle("Varde WaveArray V1 FPS: "+ofToString((int)ofGetFrameRate()));
-    
-    
-    
-    
 }
 
 void ofApp::ofRectGradient(int px, int py, int w, int h,const ofColor& start, const ofColor& end, ofGradientMode mode){
@@ -453,7 +476,7 @@ void ofApp::ofRectGradient(int px, int py, int w, int h,const ofColor& start, co
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    
+    if(key == 'd') wave_poles.addDrop(ofRandom(dropsVelMin, dropsVelMax));
 }
 
 //--------------------------------------------------------------

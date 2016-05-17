@@ -33,7 +33,7 @@
 <WaveControl>
 		<inLeft>0</inLeft>
 		<inRight>0</inRight>
-		<noiseAmt>0.15</noiseAmt>
+		<noiseAmt>0</noiseAmt>
 		<posHWavePoles>0.5</posHWavePoles>
 		<posHWaveRamp>0.5</posHWaveRamp>
 		<posHLinePoles>0.5</posHLinePoles>
@@ -55,17 +55,21 @@
 		<colorBoubbles>255, 255, 255, 255</colorBoubbles>
 		<dLinesSync>0.9</dLinesSync>
 		<Flock>
-			<flockIntensity>1</flockIntensity>
+			<flockIntensity>0</flockIntensity>
 			<maxForce>0.5</maxForce>
 			<maxSpeed>2</maxSpeed>
 			<desiredSeparation>20</desiredSeparation>
-			<neighbourDist>25</neighbourDist>
+			<neighbourDist>27</neighbourDist>
 			<weightSeparation>1.5</weightSeparation>
 			<weightAlign>1</weightAlign>
 			<weightCohesion>1</weightCohesion>
-			<numOfBoids>100</numOfBoids>
+			<numOfBoids>35</numOfBoids>
 		<flockIntensityDay>0</flockIntensityDay>
 		</Flock>
 		<updateRequest>0</updateRequest>
+	<dropsVelMin>0.001</dropsVelMin>
+		<dropsVelMax>0.1</dropsVelMax>
+		<dropsDragLimit>0.1</dropsDragLimit>
+		<colorDrops>255, 255, 255, 255</colorDrops>
 	</WaveControl>
 </visualControl>

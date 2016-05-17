@@ -20,8 +20,8 @@
 // Physics
 
 #define NUM_ARRAY 100
-#define DAMPING 0.96
-#define ATTACK  0.04
+#define DAMPING 0.99
+#define ATTACK  0.01
 
 // OSC
 #define OSCRECEIVEPORT 7000
@@ -29,8 +29,8 @@
 #define OSCHOSTIP   "127.0.0.1"
 
 // osc for soundWave
-#define SWOSCRECEIVEPORT 8000
-#define SWOSCSENDPORT 8001
+#define TRIGGER_OSCRECEIVEPORT 8000
+#define TRIGGER_OSCSENDPORT 8001
 
 // Visual
 #define LINE_WIDTH 1

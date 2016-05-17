@@ -120,9 +120,16 @@ public:
     ofFbo fboTexPoles;
     ofFbo fboTexRamp;
     
+    // drops
+    ofParameter<float> dropsVelMin;
+    ofParameter<float> dropsVelMax;
+    ofParameter<float> dropsDragLimit;
+    ofParameter<float> dropsExtraMass;
+    ofParameter<ofColor> colorDrops;
+    
     
     // soundWaves (mic input)
-    ofxOscReceiver receiveOscSoundWave;
+    ofxOscReceiver receiveOscTriggers;
 
     SoundWaveSystem sWSystem;
 
@@ -147,6 +154,8 @@ public:
     ofParameter<float> minDistUser;
     
     ofParameter<int> numOfBoids;
+    ofParameter<ofColor> colorFlock;
+
     int numOfBoidsLast;
     
     

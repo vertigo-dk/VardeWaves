@@ -40,10 +40,70 @@ public:
     }
 };
 
+class Drop{
+public:
+    float locX;
+    float p;
+    float v;
+    float dragLimit;
+    float extraMass;
+    WaveParticle* waveParticleConnected;
+    bool inWater;
+    
+    Drop() {
+    }
+    
+    void init(float _locX, WaveParticle* _waveParticleConnected, float velMin, float velMax, float _dragLimit, float _extraMass){
+        v = ofRandom(velMin, velMax);
+        p = -1;
+        dragLimit = _dragLimit;
+        extraMass = _extraMass;
+        locX = _locX;
+        waveParticleConnected = _waveParticleConnected;
+        inWater = false;
+    }
+
+    void init(float _locX, WaveParticle* _waveParticleConnected, float vel, float _dragLimit, float _extraMass){
+        v = vel;
+        p = -1;
+        dragLimit = _dragLimit;
+        extraMass = _extraMass;
+        locX = _locX;
+        waveParticleConnected = _waveParticleConnected;
+        inWater = false;
+    }
+    
+    // Method to update location
+    void update() {
+        p += v;
+        if(p > waveParticleConnected->p){
+            waveParticleConnected->p += v+extraMass;
+            inWater = true;
+        }
+    }
+
+    // Is the drop still there?
+    bool isDead() {
+        if(p > waveParticleConnected->p+dragLimit){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+};
+
 
 class WaveParticleSystem{
 public:
     vector<WaveParticle> waveParticles;
+    vector<Drop> drops;
+    
+
+    float dropsDragLimit = 0.1;
+    float dropsExtraMass  = 0.1;
+
+    ofColor colorDrops;
     
     void setup(int _numArray){
         for(int i = 0; i<_numArray; i++){
@@ -64,10 +124,40 @@ public:
         waveParticles[0].p = _inLeft;
         waveParticles.back().p = _inRight;
         
+        for(int i = 0; i < drops.size(); i++){
+            drops[i].update();
+
+            if(drops[i].isDead()){
+                drops.erase(drops.begin() + i);
+                i--;
+            }
+        }
+        
         for(int i = 1; i<waveParticles.size()-1; i++){
             waveParticles[i].update(waveParticles[i-1].p, waveParticles[i+1].p);
             int i2 = waveParticles.size()-1-i;
             waveParticles[i2].update(waveParticles[i2-1].p, waveParticles[i2+1].p);
+        }
+    }
+    
+    
+    void addDrop(float strength){
+        float locX = ofRandom(0., 1.);
+        Drop drop;
+        drop.init(locX, &waveParticles[int(waveParticles.size()*locX)], strength, dropsDragLimit, dropsExtraMass);
+        drops.push_back(drop);
+    }
+    
+    void drawDrops(int _x, int _y,int _w, int _h, ofColor colorDrop, float _posHLine){
+        ofSetColor(colorDrop);
+        ofFill();
+        ofSetLineWidth(1.);
+        for(auto & drop : drops){
+            if(!drop.inWater){
+                float x = drop.locX*_w;
+                float y = (drop.p/2+1-_posHLine)*_h;
+                ofDrawRectangle(x, y, 1,1);
+            }
         }
     }
     
@@ -76,13 +166,20 @@ public:
         ofTranslate(_x, _y);
         ofSetLineWidth(_lineWidth);
         ofSetColor(colorLine);
-        float inc = waveParticles.size()/_w;
-        ofPolyline line;
+        float inc = float(waveParticles.size())/float(_w+1);
+        ofPath line;
+        line.lineTo(0,_h); // Left under Corner
+
         for(int i = 0; i <= _w; i++){
             float x = i;
             float y = (waveParticles[i*inc].p/2+1-_posHLine)*_h;
-            line.addVertex(ofVec2f(x,y));
+            line.lineTo(ofVec2f(x,y));
         }
+            line.lineTo(_w,_h); // right under corner
+            line.lineTo(0,_h); // Left under Corner
+
+           // line.close();
+            line.isFilled();
         line.draw();
         ofPopMatrix();
     }
@@ -91,8 +188,8 @@ public:
         ofPushMatrix();
         ofTranslate(_x, _y);
         
-        float inc = waveParticles.size()/_w;
-        float incTex = _texture.getWidth() / _w;
+        float inc = float(waveParticles.size())/float(_w+1);
+        float incTex = float(_texture.getWidth()) /float(_w+1);
         float texHeight = _texture.getHeight();
         float texHalfHeight = texHeight/2;
         

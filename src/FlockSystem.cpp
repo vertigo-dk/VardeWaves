@@ -24,6 +24,9 @@ void FlockSystem::setup(float numOfBoids_, ofVec2f gravity_, int diameter_) {
     ofEnableSmoothing();
     imageFbo.end();
     
+    maxSpeed = 0.5;
+    maxForce = 2;
+    
     
     
     
@@ -237,7 +240,7 @@ void FlockSystem::draw(int _x, int _y, int width_, int height_, ofColor drawColo
     
     
     imageFbo.begin();
-    ofBackground(0, 100);
+    ofBackground(0, 0);
     // vector to store values for shader communication
     int total = boids.size();
     for(int i = 0; i < total; i++){
@@ -275,7 +278,7 @@ void FlockSystem::addNewBoid(){
     
     float mass = 5;
     
-    ofVec2f initialVelocity = ofVec2f(ofRandom(-10,10),ofRandom(-10,10));
+    ofVec2f initialVelocity = ofVec2f(ofRandom(-10,10),ofRandom(-2,2));
     ofVec2f origin = ofVec2f( ofRandom(renderSize), ofRandom(renderSize));
 
     
