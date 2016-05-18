@@ -24,6 +24,7 @@ public:
     void setup();
     void update();
     void draw();
+    void exit();
     
     void ofRectGradient(int px, int py, int w, int h,const ofColor& start, const ofColor& end, ofGradientMode mode);
     
@@ -158,7 +159,11 @@ public:
 
     int numOfBoidsLast;
     
+    // Create Mask
     
+    ofVec2f cursor;
+    ofImage pixelMask;
+    bool editMask;
 
 
 };

@@ -173,6 +173,11 @@ void ofApp::setup(){
     
     
     
+    // MASK
+    if(!pixelMask.load("mask.png")){
+        pixelMask.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE, OF_IMAGE_COLOR_ALPHA);
+    }
+
     
     
     
@@ -399,6 +404,14 @@ void ofApp::update(){
         ofDrawRectangle(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP);
         ofSetColor(255,255);
         ofRectGradient(RENDER_WIDTH_POLE,RENDER_HEIGHT_RAMP, RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE-RENDER_HEIGHT_RAMP, colorTopTop, colorTopBot, OF_GRADIENT_LINEAR);
+        
+        
+        // DRAW MASK
+        if(editMask){
+            ofSetColor(0,255);
+            ofDrawRectangle(cursor.x, cursor.y, 1, 1);
+        }
+        pixelMask.draw(0, 0);
     }
     render.end();
     
@@ -408,8 +421,32 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofBackground(150);
+    
+    
+    ofPushMatrix();
+    ofTranslate(0, 30);
     gui.draw();
+    ofPopMatrix();
+    
+    stringstream s;
+    
+    if(editMask){
+        s << "cursor" << endl;
+        s << "x:" << cursor.x;
+        s << " | y:" << cursor.y;
+    }else{
+        s << "press m to edit mask";
+    }
+    
+    ofDrawBitmapStringHighlight(s.str(), 10, 10);
+    
     ofSetWindowTitle("Varde WaveArray V1 FPS: "+ofToString((int)ofGetFrameRate()));
+}
+
+
+//--------------------------------------------------------------
+void ofApp::exit(){
+    pixelMask.save("mask.png");
 }
 
 void ofApp::ofRectGradient(int px, int py, int w, int h,const ofColor& start, const ofColor& end, ofGradientMode mode){
@@ -476,7 +513,51 @@ void ofApp::ofRectGradient(int px, int py, int w, int h,const ofColor& start, co
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if(key == 'd') wave_poles.addDrop(ofRandom(dropsVelMin, dropsVelMax));
+
+    switch (key) {
+            
+            
+        case 'd':
+            wave_poles.addDrop(ofRandom(dropsVelMin, dropsVelMax));
+            break;
+            
+        case 'm':
+            editMask = !editMask;
+            break;
+            
+        case 's':
+            pixelMask.save("mask.png");
+            break;
+
+        case '1':
+            pixelMask.setColor(cursor.x, cursor.y, ofColor(0,0,0,255));
+            pixelMask.update();
+            break;
+            
+        case '0':
+            pixelMask.setColor(cursor.x, cursor.y, ofColor(0,0,0,0));
+            pixelMask.update();
+            break;
+
+            
+        case OF_KEY_LEFT:
+            if(cursor.x-1 == -1) cursor.x = RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP+1;
+            cursor.x = int(cursor.x-1)%int(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP);
+            break;
+        case OF_KEY_RIGHT:
+            cursor.x = int(cursor.x+1)%int(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP);
+            break;
+        case OF_KEY_UP:
+            if(cursor.y-1 == -1) cursor.y = RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP+1;
+            cursor.y = int(cursor.y-1)%int(RENDER_HEIGHT_POLE);
+            break;
+        case OF_KEY_DOWN:
+            cursor.y = int(cursor.y+1)%int(RENDER_HEIGHT_POLE);
+            break;
+        default:
+            break;
+    }
+
 }
 
 //--------------------------------------------------------------
