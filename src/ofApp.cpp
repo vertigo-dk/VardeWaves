@@ -176,6 +176,7 @@ void ofApp::setup(){
     // MASK
     if(!pixelMask.load("mask.png")){
         pixelMask.allocate(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP, RENDER_HEIGHT_POLE, OF_IMAGE_COLOR_ALPHA);
+        pixelMask.setColor(ofColor(0,0,0,0));
     }
 
     
@@ -292,9 +293,17 @@ void ofApp::update(){
         }
         
         // check for mouse button message
-        else if(m.getAddress() == "/waveSystem/addDrop/"){
+        else if(m.getAddress() == "/waveSystem/addDropL/"){
             float  strength = m.getArgAsFloat(0);
-            wave_poles.addDrop(ofMap(strength, 0., 1., dropsVelMin, dropsVelMax));
+            wave_poles.addDrop(ofMap(strength, 0., 1., dropsVelMin, dropsVelMax), 0, 12, RENDER_WIDTH_POLE);
+        }
+        else if(m.getAddress() == "/waveSystem/addDropR/"){
+            float  strength = m.getArgAsFloat(0);
+            wave_poles.addDrop(ofMap(strength, 0., 1., dropsVelMin, dropsVelMax), 18 + (int) ofRandom(14), 32, RENDER_WIDTH_POLE);
+        }
+        else if(m.getAddress() == "/waveSystem/addDropM/"){
+            float  strength = m.getArgAsFloat(0);
+            wave_ramp.addDrop(ofMap(strength, 0., 1., dropsVelMin, dropsVelMax), 0, RENDER_WIDTH_RAMP, RENDER_WIDTH_RAMP);
         }
         
     }
@@ -423,24 +432,24 @@ void ofApp::draw(){
     ofBackground(150);
     
     
-    ofPushMatrix();
-    ofTranslate(0, 30);
+//    ofPushMatrix();
+//    ofTranslate(0, 30);
     gui.draw();
-    ofPopMatrix();
+//    ofPopMatrix();
     
     stringstream s;
     
     if(editMask){
-        s << "cursor" << endl;
-        s << "x:" << cursor.x;
+        s << "cursor";
+        s << " x:" << cursor.x;
         s << " | y:" << cursor.y;
     }else{
-        s << "press m to edit mask";
+        s << "Varde WaveArray V1 FPS: "+ofToString((int)ofGetFrameRate());
     }
     
-    ofDrawBitmapStringHighlight(s.str(), 10, 10);
-    
-    ofSetWindowTitle("Varde WaveArray V1 FPS: "+ofToString((int)ofGetFrameRate()));
+//    ofDrawBitmapStringHighlight(s.str(), 10, 10);
+    ofSetWindowTitle(s.str());
+
 }
 
 
@@ -516,17 +525,17 @@ void ofApp::keyPressed(int key){
 
     switch (key) {
             
-            
-        case 'd':
-            wave_poles.addDrop(ofRandom(dropsVelMin, dropsVelMax));
-            break;
-            
         case 'm':
             editMask = !editMask;
             break;
             
         case 's':
             pixelMask.save("mask.png");
+            break;
+            
+        case 'c':
+            pixelMask.setColor(ofColor(0,0,0,0));
+            pixelMask.update();
             break;
 
         case '1':
@@ -541,15 +550,15 @@ void ofApp::keyPressed(int key){
 
             
         case OF_KEY_LEFT:
-            if(cursor.x-1 == -1) cursor.x = RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP+1;
-            cursor.x = int(cursor.x-1)%int(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP);
+            cursor.x--;
+            if(cursor.x == -1) cursor.x = RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP-1;
             break;
         case OF_KEY_RIGHT:
             cursor.x = int(cursor.x+1)%int(RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP);
             break;
         case OF_KEY_UP:
-            if(cursor.y-1 == -1) cursor.y = RENDER_WIDTH_POLE+RENDER_WIDTH_RAMP+1;
-            cursor.y = int(cursor.y-1)%int(RENDER_HEIGHT_POLE);
+            cursor.y--;
+            if(cursor.y == -1) cursor.y = RENDER_HEIGHT_POLE-1;
             break;
         case OF_KEY_DOWN:
             cursor.y = int(cursor.y+1)%int(RENDER_HEIGHT_POLE);

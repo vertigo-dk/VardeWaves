@@ -34,12 +34,12 @@
 		<inLeft>0</inLeft>
 		<inRight>0</inRight>
 		<noiseAmt>0</noiseAmt>
-		<posHWavePoles>0.5</posHWavePoles>
-		<posHWaveRamp>0.5</posHWaveRamp>
-		<posHLinePoles>0.5</posHLinePoles>
-		<posHLineRamp>0.5</posHLineRamp>
-		<colorTopTop>0, 154, 255, 255</colorTopTop>
-		<colorTopBot>255, 179, 66, 255</colorTopBot>
+		<posHWavePoles>0</posHWavePoles>
+		<posHWaveRamp>0</posHWaveRamp>
+		<posHLinePoles>0</posHLinePoles>
+		<posHLineRamp>0</posHLineRamp>
+		<colorTopTop>0, 0, 255, 255</colorTopTop>
+		<colorTopBot>0, 0, 255, 255</colorTopBot>
 		<colorBotTop>0, 105, 255, 255</colorBotTop>
 		<colorBotBot>0, 0, 55, 255</colorBotBot>
 		<colorLine>255, 255, 255, 255</colorLine>
@@ -65,11 +65,13 @@
 			<weightCohesion>1</weightCohesion>
 			<numOfBoids>35</numOfBoids>
 		<flockIntensityDay>0</flockIntensityDay>
+		<colorFlock>0, 0, 0, 255</colorFlock>
 		</Flock>
 		<updateRequest>0</updateRequest>
 	<dropsVelMin>0.001</dropsVelMin>
 		<dropsVelMax>0.1</dropsVelMax>
 		<dropsDragLimit>0.1</dropsDragLimit>
 		<colorDrops>255, 255, 255, 255</colorDrops>
+	<dropsExtraMass>0.01</dropsExtraMass>
 	</WaveControl>
 </visualControl>

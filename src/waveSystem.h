@@ -141,8 +141,8 @@ public:
     }
     
     
-    void addDrop(float strength){
-        float locX = ofRandom(0., 1.);
+    void addDrop(float strength, float posX_from, float posX_to, float width){
+        float locX = ofRandom(posX_from/width, posX_to/width);
         Drop drop;
         drop.init(locX, &waveParticles[int(waveParticles.size()*locX)], strength, dropsDragLimit, dropsExtraMass);
         drops.push_back(drop);
@@ -156,7 +156,7 @@ public:
             if(!drop.inWater){
                 float x = drop.locX*_w;
                 float y = (drop.p/2+1-_posHLine)*_h;
-                ofDrawRectangle(x, y, 1,1);
+                ofDrawRectangle(x, y, 1,10);
             }
         }
     }
